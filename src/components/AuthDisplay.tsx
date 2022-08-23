@@ -22,11 +22,11 @@ function Status({ status, isComplete }: { status: AuthStatus, isComplete: boolea
 		case "creatingRequestToken":
 			return <TaskDisplay isComplete={isComplete}>Creating request token</TaskDisplay>;
 		case "waitingForLogin":
-			return <Text>You need to login here: {status.url}</Text>
+			return <TaskDisplay isComplete={isComplete}>You need to login here: <Text color="yellow" underline={true}>{status.url}</Text></TaskDisplay>
 		case "savingAuthToken":
 			return <></>
 		case "authenticated":
-			return <Text>Authenticated</Text>
+			return <TaskDisplay isComplete={true}>Authenticated</TaskDisplay>
 		case "error":
 			return <Text>Error: {JSON.stringify(status.error)}</Text>
 	}
