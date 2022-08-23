@@ -35,41 +35,49 @@ type Error = {
 
 const api = new API();
 
-export function useAuth(): AuthStatus {
-	const [status, setStatus] = useState<AuthStatus>({ type: "checking" });
+type Auth = {
+	currentStatus: AuthStatus;
+	statuses: AuthStatus[];
+};
+
+export function useAuth(): Auth {
+	const [status, setStatus] = useState<AuthStatus[]>([{ type: "checking" }]);
 
 	useEffect(() => {
 		async function auth() {
 			try {
 				const token = await loadAuthToken();
 				if (token) {
-					setStatus({ type: "authenticated", token });
+					setStatus([...status, { type: "authenticated", token }]);
 					return;
 				}
 
-				setStatus({ type: "creatingRequestToken" });
+				setStatus([...status, { type: "creatingRequestToken" }]);
 				const requestToken = await api.createRequestToken();
 
-				setStatus({ type: "waitingForLogin" });
+				setStatus([...status, { type: "waitingForLogin" }]);
 				const authToken = await Promise.race<AuthToken | undefined>([
 					pollForAuthenticated(requestToken),
 					resolveAfter(60 * 15).then(),
 				]);
 
 				if (authToken != null) {
-					setStatus({ type: "authenticated", token: authToken });
+					setStatus([...status, { type: "authenticated", token: authToken }]);
 					return;
 				}
 
-				setStatus({ type: "error", error: new Error("Timeout") });
+				setStatus([...status, { type: "error", error: new Error("Timeout") }]);
 			} catch (error) {
-				setStatus({ type: "error", error });
+				setStatus([...status, { type: "error", error }]);
 			}
 		}
 		auth();
 	}, []);
 
-	return status;
+	return {
+		currentStatus: status[status.length - 1]!,
+		statuses: status,
+	};
 }
 
 async function pollForAuthenticated(requestToken: string): Promise<AuthToken> {
