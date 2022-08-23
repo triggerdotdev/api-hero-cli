@@ -1,5 +1,5 @@
 import { Program } from "@boost/cli";
-import AddCommand from "./AddCommand";
+import AddCommand from "./commands/AddCommand";
 
 const program = new Program({
 	bin: "apihero",
