@@ -1,6 +1,5 @@
 import { Arg, Command, GlobalOptions } from "@boost/cli";
-import { Style } from "@boost/cli/react";
-import { Box, Text } from "ink";
+import { Text } from "ink";
 import React from "react";
 
 type CustomParams = [string];
@@ -17,12 +16,16 @@ export default class AddCommand extends Command<GlobalOptions, CustomParams> {
 	});
 
 	async run(query: string) {
-		return (
-			<Box>
-				<Text>
-					Searching for <Style type="success">{query}</Style>
-				</Text>
-			</Box>
-		);
+		await this.render(<Component query={query} />);
 	}
+}
+
+function Component({ query }: { query: string }) {
+	return (
+		<>
+			<Text>More text here</Text>
+			<Text>Yet More text here {query}</Text>
+			{/* <Confirm label="Do you want to continue?" onSubmit={() => {}} /> */}
+		</>
+	);
 }
