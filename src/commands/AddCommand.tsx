@@ -1,9 +1,9 @@
 import { Arg, Command, GlobalOptions } from "@boost/cli";
-import { Box, Text } from "ink";
+import { Box } from "ink";
 import React from "react";
 import { AuthDisplay } from "../components/AuthDisplay";
 import { Logo } from "../components/Logo";
-import { useAuth } from "../hooks/useAuth";
+import { SearchResults } from "../components/SearchResults";
 
 type CustomParams = [string];
 
@@ -19,20 +19,17 @@ export default class AddCommand extends Command<GlobalOptions, CustomParams> {
 	});
 
 	async run(query: string) {
-		await this.render(<Component query={query} />);
+		await this.render(<Add query={query} />);
 	}
 }
 
-function Component({ query }: { query: string }) {
-	const { currentStatus } = useAuth();
-
+function Add({ query }: { query: string }) {
 	return (
 		<Box flexDirection="column">
 			<Logo />
 
 			<AuthDisplay />
-
-			{currentStatus.type === "authenticated" && <Text>{query}</Text>}
+			<SearchResults query={query} />
 		</Box>
 	);
 }
