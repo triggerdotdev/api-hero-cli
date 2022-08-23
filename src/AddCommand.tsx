@@ -1,5 +1,6 @@
 import { Arg, Command, GlobalOptions } from "@boost/cli";
-import { Text } from "ink";
+import { Confirm } from "@boost/cli/react";
+import { Box, Text } from "ink";
 import React from "react";
 
 type CustomParams = [string];
@@ -22,10 +23,10 @@ export default class AddCommand extends Command<GlobalOptions, CustomParams> {
 
 function Component({ query }: { query: string }) {
 	return (
-		<>
+		<Box flexDirection="column">
 			<Text>More text here</Text>
 			<Text>Yet More text here {query}</Text>
-			{/* <Confirm label="Do you want to continue?" onSubmit={() => {}} /> */}
-		</>
+			<Confirm label="Do you want to continue?" onSubmit={() => {}} />
+		</Box>
 	);
 }
