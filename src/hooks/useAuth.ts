@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import { API } from "../api/api";
 import { AuthToken } from "../api/types";
-import { loadAuthToken } from "../common/auth";
+import { loadAuthToken, saveAuthToken } from "../common/auth";
 import { resolveAfter } from "../common/common";
 
 type AuthStatus =
 	| Checking
 	| CreatingRequestToken
 	| WaitingForLogin
+	| SavingAuthToken
 	| Authenticated
 	| Error;
 
@@ -21,6 +22,10 @@ type CreatingRequestToken = {
 
 type WaitingForLogin = {
 	type: "waitingForLogin";
+};
+
+type SavingAuthToken = {
+	type: "savingAuthToken";
 };
 
 type Authenticated = {
@@ -48,27 +53,32 @@ export function useAuth(): Auth {
 			try {
 				const token = await loadAuthToken();
 				if (token) {
-					setStatus([...status, { type: "authenticated", token }]);
+					setStatus((s) => [...s, { type: "authenticated", token }]);
 					return;
 				}
 
-				setStatus([...status, { type: "creatingRequestToken" }]);
+				setStatus((s) => [...s, { type: "creatingRequestToken" }]);
 				const requestToken = await api.createRequestToken();
 
-				setStatus([...status, { type: "waitingForLogin" }]);
+				setStatus((s) => [...s, { type: "waitingForLogin" }]);
 				const authToken = await Promise.race<AuthToken | undefined>([
 					pollForAuthenticated(requestToken),
 					resolveAfter(60 * 15).then(),
 				]);
 
 				if (authToken != null) {
-					setStatus([...status, { type: "authenticated", token: authToken }]);
+					setStatus((s) => [...s, { type: "savingAuthToken" }]);
+					await saveAuthToken(authToken);
+					setStatus((s) => [...s, { type: "authenticated", token: authToken }]);
 					return;
 				}
 
-				setStatus([...status, { type: "error", error: new Error("Timeout") }]);
+				setStatus((s) => [
+					...s,
+					{ type: "error", error: new Error("Timeout") },
+				]);
 			} catch (error) {
-				setStatus([...status, { type: "error", error }]);
+				setStatus((s) => [...s, { type: "error", error }]);
 			}
 		}
 		auth();
