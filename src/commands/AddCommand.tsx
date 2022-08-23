@@ -1,8 +1,10 @@
 import { Arg, Command, GlobalOptions } from "@boost/cli";
-import { Confirm, Select } from "@boost/cli/react";
 import { Box, Text } from "ink";
 import React from "react";
 import { Logo } from "../components/Logo";
+import { createAddMachine } from "../states/add-machine";
+import { useMachine } from "@xstate/react";
+import { AuthToken } from "../api/types";
 
 type CustomParams = [string];
 
@@ -23,31 +25,32 @@ export default class AddCommand extends Command<GlobalOptions, CustomParams> {
 }
 
 function Component({ query }: { query: string }) {
+	useMachine(createAddMachine(query), {
+		actions: {
+			hasAuthToken: (context) => {
+				setAuthToken(context.authToken);
+			},
+			"auth.waiting": () => {
+				// setAuthToken(context.authToken);
+			},
+			"auth.authenticated": (context) => {
+				setAuthToken(context.authToken);
+			},
+		},
+	});
+
+	const [authToken, setAuthToken] = React.useState<AuthToken | undefined>(
+		undefined
+	);
+
 	return (
 		<Box flexDirection="column">
 			<Logo />
-			<Text>More text here</Text>
-			<Text>Yet More text here {query}</Text>
-			<Select
-				label="What is your favorite fruit?"
-				onSubmit={() => {}}
-				options={[
-					{ label: "🍎 Apple", value: "apple" },
-					{ label: "🍌 Banana", value: "banana" },
-					{ label: "🥥 Coconut", value: "coconut" },
-					{ label: "🍇 Grapes", value: "grapes" },
-					{ label: "🥝 Kiwi", value: "kiwi" },
-					{ label: "🍋 Lemon", value: "lemon" },
-					{ label: "🍈 Melon", value: "melon" },
-					{ label: "🍊 Orange", value: "orange" },
-					{ label: "🍑 Peach", value: "peach" },
-					{ label: "🍐 Pear", value: "pear" },
-					{ label: "🍍 Pineapple", value: "pineapple" },
-					{ label: "🍓 Strawberry", value: "strawberry" },
-					{ label: "🍉 Watermelon", value: "watermelon" },
-				]}
-			/>
-			<Confirm label="Do you want to continue?" onSubmit={() => {}} />
+			{authToken === undefined ? (
+				<Text>Fetching auth token…</Text>
+			) : (
+				<Text>Has auth token</Text>
+			)}
 		</Box>
 	);
 }
