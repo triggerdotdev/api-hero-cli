@@ -28,7 +28,7 @@ function Status({ status, isComplete }: { status: AuthStatus, isComplete: boolea
 		case "authenticated":
 			return <TaskDisplay isComplete={true}>Authenticated</TaskDisplay>
 		case "error":
-			return <Text>Error: {JSON.stringify(status.error)}</Text>
+			return <Text color="red">Error: {JSON.stringify(status.error)}</Text>
 	}
 }
 
