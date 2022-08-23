@@ -1,6 +1,7 @@
 import { Arg, Command, GlobalOptions } from "@boost/cli";
 import { Box, Text } from "ink";
 import React from "react";
+import { AuthDisplay } from "../components/AuthDisplay";
 import { Logo } from "../components/Logo";
 import { useAuth } from "../hooks/useAuth";
 
@@ -23,16 +24,15 @@ export default class AddCommand extends Command<GlobalOptions, CustomParams> {
 }
 
 function Component({ query }: { query: string }) {
-	const { statuses } = useAuth();
+	const { currentStatus } = useAuth();
 
 	return (
 		<Box flexDirection="column">
 			<Logo />
 
-			{statuses.map((status) => (
-				<Text key={status.type}>{status.type}</Text>
-			))}
-			<Text>{query}</Text>
+			<AuthDisplay />
+
+			{currentStatus.type === "authenticated" && <Text>{query}</Text>}
 		</Box>
 	);
 }

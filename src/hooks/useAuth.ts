@@ -4,7 +4,7 @@ import { AuthToken } from "../api/types";
 import { loadAuthToken, saveAuthToken } from "../common/auth";
 import { resolveAfter } from "../common/common";
 
-type AuthStatus =
+export type AuthStatus =
 	| Checking
 	| CreatingRequestToken
 	| WaitingForLogin
@@ -22,6 +22,7 @@ type CreatingRequestToken = {
 
 type WaitingForLogin = {
 	type: "waitingForLogin";
+	url: string;
 };
 
 type SavingAuthToken = {
@@ -60,7 +61,10 @@ export function useAuth(): Auth {
 				setStatus((s) => [...s, { type: "creatingRequestToken" }]);
 				const requestToken = await api.createRequestToken();
 
-				setStatus((s) => [...s, { type: "waitingForLogin" }]);
+				setStatus((s) => [
+					...s,
+					{ type: "waitingForLogin", url: `${api.authUrl}/${requestToken}` },
+				]);
 				const authToken = await Promise.race<AuthToken | undefined>([
 					pollForAuthenticated(requestToken),
 					resolveAfter(60 * 15).then(),
