@@ -52,7 +52,7 @@ function Status({ query, status, isComplete }: { query: string, status: APISearc
     case "waiting":
       return <></>
     case "searching":
-      return <TaskDisplay isComplete={isComplete}>Searching for <Text color="yellow">{query}</Text></TaskDisplay>;
+      return <TaskDisplay isComplete={isComplete}>Searching for "<Text color="yellow">{query}</Text>"</TaskDisplay>;
     case "noResults":
       return <Text>Found no results</Text>
     case "error":
