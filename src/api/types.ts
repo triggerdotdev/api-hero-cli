@@ -10,7 +10,7 @@
 
 // project id flow
 // if trying to add an API and there isn't a project id, then the user is prompted to select a project, or create a new one if there aren't any
-// creates the apiherp.json file in the project
+// creates the apihero.json file in the project
 // apihero.json
 // {
 //   "projects": {
@@ -20,35 +20,35 @@
 // }
 
 export interface APIService {
-  authUrl: string;
-  createRequestToken(): Promise<string>;
-  isAuthenticated(requestToken: string): Promise<AuthToken | undefined>;
-  searchAPIs(query: string, authToken: AuthToken): Promise<APIResult[]>;
-  getProjects(authToken: AuthToken): Promise<Project[]>;
+	authUrl: string;
+	createRequestToken(): Promise<string>;
+	isAuthenticated(requestToken: string): Promise<AuthToken | undefined>;
+	searchAPIs(query: string, authToken: AuthToken): Promise<APIResult[]>;
+	getProjects(authToken: AuthToken): Promise<Project[]>;
 }
 
 export type AuthToken = {
-  tokenId: string;
+	tokenId: string;
 };
 
 export type APIResult = {
-  name: string;
-  description: string;
-  documentationUrl: string;
-  url: string;
+	name: string;
+	description: string;
+	documentationUrl: string;
+	url: string;
 };
 
 export type Project = {
-  name: string;
-  id: string;
-  workspace: {
-    id: string;
-    name: string;
-  };
+	name: string;
+	id: string;
+	workspace: {
+		id: string;
+		name: string;
+	};
 };
 
 export type Errors = AuthenticationError;
 
 type AuthenticationError = {
-  code: "AUTH";
+	code: "AUTH";
 };
