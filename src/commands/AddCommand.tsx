@@ -24,6 +24,7 @@ export default class AddCommand extends Command<GlobalOptions, CustomParams> {
 }
 
 function Add({ query }: { query: string }) {
+
 	return (
 		<Box flexDirection="column">
 			<Logo />

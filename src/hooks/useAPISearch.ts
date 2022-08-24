@@ -27,7 +27,26 @@ type Error = {
 	error: any;
 };
 
-type APISearchReturn = [APISearchStatus, APISearchStatus[]];
+type SelectedAPI = WaitingForResult | NoneResult | APISelection;
+
+type APISelection = {
+	type: "api";
+} & APIResult;
+
+type NoneResult = {
+	type: "none";
+};
+
+type WaitingForResult = {
+	type: "waiting";
+};
+
+type APISearchReturn = [
+	APISearchStatus,
+	APISearchStatus[],
+	SelectedAPI,
+	(selectedApi: SelectedAPI) => void
+];
 
 const api = new API();
 
@@ -36,6 +55,9 @@ export function useAPISearch(query: string): APISearchReturn {
 	const [statuses, setStatuses] = useState<APISearchStatus[]>([
 		{ type: "waiting" },
 	]);
+	const [selectedApi, setSelectedApi] = useState<SelectedAPI>({
+		type: "waiting",
+	});
 
 	useEffect(() => {
 		if (currentStatus.type !== "authenticated") {
@@ -61,5 +83,10 @@ export function useAPISearch(query: string): APISearchReturn {
 		search(currentStatus.token);
 	}, [currentStatus]);
 
-	return [statuses[statuses.length - 1]!, statuses];
+	return [
+		statuses[statuses.length - 1]!,
+		statuses,
+		selectedApi,
+		setSelectedApi,
+	];
 }
