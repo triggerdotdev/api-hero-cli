@@ -1,3 +1,5 @@
+import { z } from "zod";
+
 // auth flow
 // 1. create request token
 // 2. take request token and append to the url
@@ -38,14 +40,12 @@ export type APIResult = {
 	url: string;
 };
 
-export type Project = {
-	name: string;
-	id: string;
-	workspace: {
-		id: string;
-		name: string;
-	};
-};
+const projectSchema = z.object({
+	workspaceId: z.string(),
+	projectId: z.string(),
+});
+
+type Project = z.infer<typeof projectSchema>;
 
 export type Errors = AuthenticationError;
 

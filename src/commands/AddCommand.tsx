@@ -4,6 +4,7 @@ import React from "react";
 import { AuthDisplay } from "../components/AuthDisplay";
 import { Logo } from "../components/Logo";
 import { SearchResults } from "../components/SearchResults";
+import { SelectProject } from "../components/SelectProject";
 
 type CustomParams = [string];
 
@@ -24,13 +25,12 @@ export default class AddCommand extends Command<GlobalOptions, CustomParams> {
 }
 
 function Add({ query }: { query: string }) {
-
 	return (
 		<Box flexDirection="column">
 			<Logo />
-
 			<AuthDisplay />
 			<SearchResults query={query} />
+			<SelectProject query={query} />
 		</Box>
 	);
 }
