@@ -1,10 +1,21 @@
 import { Box, Text } from "ink";
-import React from "react";
+import React, { useEffect } from "react";
+import { AuthToken } from "../api/types";
 import { AuthStatus, useAuth } from "../hooks/useAuth";
 import { TaskDisplay } from "./TaskDisplay";
 
-export function AuthDisplay() {
-	const { statuses } = useAuth();
+type AuthDisplayProps = {
+	onComplete: (authToken: AuthToken) => void;
+}
+
+export function AuthDisplay({ onComplete }: AuthDisplayProps) {
+	const { statuses, currentStatus } = useAuth();
+
+	useEffect(() => {
+		if (currentStatus.type === "authenticated") {
+			onComplete(currentStatus.token);
+		}
+	}, [currentStatus])
 
 	return (
 		<Box flexDirection="column">

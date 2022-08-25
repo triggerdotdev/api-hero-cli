@@ -5,6 +5,7 @@ import { AuthDisplay } from "../components/AuthDisplay";
 import { Logo } from "../components/Logo";
 import { SearchResults } from "../components/SearchResults";
 import { SelectProject } from "../components/SelectProject";
+import { AddCommandState, useAddCommand } from "../hooks/useAddCommand";
 
 type CustomParams = [string];
 
@@ -25,12 +26,28 @@ export default class AddCommand extends Command<GlobalOptions, CustomParams> {
 }
 
 function Add({ query }: { query: string }) {
+	const { states, setCurrentState } = useAddCommand();
+
 	return (
 		<Box flexDirection="column">
 			<Logo />
-			<AuthDisplay />
-			<SearchResults query={query} />
-			<SelectProject query={query} />
+			{states.map((state, index) => (<State key={index} state={state} query={query} setCurrentState={setCurrentState} />))}
 		</Box>
 	);
+}
+
+function State({ state, query, setCurrentState }: { state: AddCommandState, query: string, setCurrentState: (state: AddCommandState) => void }) {
+	switch (state.type) {
+		case "authenticating": {
+			return <AuthDisplay onComplete={authToken => setCurrentState({ type: "searching", query: query, authToken })} />;
+		}
+		case "searching": {
+			return <SearchResults query={query} />;
+		}
+		case "selectingProject": {
+			return <SelectProject />;
+		}
+		default:
+			return <></>;
+	}
 }

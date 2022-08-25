@@ -1,12 +1,12 @@
 /* eslint-disable unicorn/no-useless-undefined */
 import fs from "node:fs";
-import { Project, projectSchema } from "../api/types";
+import { ProjectConfig, projectConfigSchema } from "../api/types";
 
 const workspaceEnvName = "APIHERO_WORKSPACE_ID";
 const projectEnvName = "APIHERO_PROJECT_ID";
 const projectFileName = "apihero.json";
 
-export function loadProject(): Promise<Project | undefined> {
+export function loadProject(): Promise<ProjectConfig | undefined> {
 	const envProject = loadProjectFromEnvironment();
 	if (envProject) {
 		return Promise.resolve(envProject);
@@ -21,7 +21,7 @@ export function loadProject(): Promise<Project | undefined> {
 
 			const json = JSON.parse(data.toString());
 
-			return projectSchema.parse(json);
+			return projectConfigSchema.parse(json);
 		});
 	});
 }
@@ -30,7 +30,7 @@ if (process.env["NODE_ENV"] !== "production") {
 	require("dotenv").config();
 }
 
-function loadProjectFromEnvironment(): Project | undefined {
+function loadProjectFromEnvironment(): ProjectConfig | undefined {
 	const workspaceId = process.env[workspaceEnvName];
 	const projectId = process.env[projectEnvName];
 	if (workspaceId && projectId) {

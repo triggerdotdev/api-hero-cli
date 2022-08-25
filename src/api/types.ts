@@ -26,7 +26,7 @@ export interface APIService {
 	createRequestToken(): Promise<string>;
 	isAuthenticated(requestToken: string): Promise<AuthToken | undefined>;
 	searchAPIs(query: string, authToken: AuthToken): Promise<APIResult[]>;
-	getProjects(authToken: AuthToken): Promise<Project[]>;
+	getProjects(authToken: AuthToken): Promise<ProjectWorkspaceResponse[]>;
 }
 
 export type AuthToken = {
@@ -40,12 +40,21 @@ export type APIResult = {
 	url: string;
 };
 
-const projectSchema = z.object({
+export type ProjectWorkspaceResponse = {
+	id: string;
+	name: string;
+	workspace: {
+		id: string;
+		name: string;
+	};
+};
+
+export const projectConfigSchema = z.object({
 	workspaceId: z.string(),
 	projectId: z.string(),
 });
 
-type Project = z.infer<typeof projectSchema>;
+export type ProjectConfig = z.infer<typeof projectConfigSchema>;
 
 export type Errors = AuthenticationError;
 
