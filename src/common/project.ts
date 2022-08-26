@@ -1,6 +1,11 @@
 /* eslint-disable unicorn/no-useless-undefined */
 import fs from "node:fs";
-import { ProjectConfig, projectConfigSchema } from "../api/types";
+import {
+	ProjectConfig,
+	projectConfigSchema,
+	ProjectDefinition,
+	WorkspaceDefinition,
+} from "../api/types";
 
 const workspaceEnvName = "APIHERO_WORKSPACE_ID";
 const projectEnvName = "APIHERO_PROJECT_ID";
@@ -20,8 +25,29 @@ export function loadProject(): Promise<ProjectConfig | undefined> {
 			}
 
 			const json = JSON.parse(data.toString());
+			const parsed = projectConfigSchema.safeParse(json);
+			if (parsed.success) {
+				resolve(parsed.data);
+			} else {
+				resolve(undefined);
+			}
+		});
+	});
+}
 
-			return projectConfigSchema.parse(json);
+export function saveProject(
+	workspaceId: string,
+	projectId: string
+): Promise<void> {
+	return new Promise((resolve) => {
+		const data: ProjectConfig = { workspaceId, projectId };
+
+		fs.writeFile(`./${projectFileName}`, JSON.stringify(data), (error) => {
+			if (error) {
+				throw error;
+			}
+
+			resolve();
 		});
 	});
 }

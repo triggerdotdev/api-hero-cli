@@ -102,12 +102,16 @@ export function SelectProject({ authToken, onComplete }: SelectProjectProps) {
             </TaskDisplay>
           )
         case "createProject":
-          return <Input
-            key={status.type}
-            label="What would you like to call your new project?"
-            placeholder="<project name>"
-            onSubmit={(name) => createProject({ id: status.workspaceId, name: status.workspaceName }, name)}
-          />
+          if (isComplete) {
+            return <React.Fragment key={status.type}></React.Fragment>
+          } else {
+            return <Input
+              key={status.type}
+              label="What would you like to call your new project?"
+              placeholder="<project name>"
+              onSubmit={(name) => createProject({ id: status.workspaceId, name: status.workspaceName }, name)}
+            />
+          }
         case "creatingProject":
           return (
             <TaskDisplay key={status.type} isComplete={isComplete}>
@@ -116,8 +120,12 @@ export function SelectProject({ authToken, onComplete }: SelectProjectProps) {
                 : `Creating project ${status.name}`}
             </TaskDisplay>
           )
+        case "savingProject":
+          return (
+            <TaskDisplay key={status.type} isComplete={isComplete}>Saving project</TaskDisplay>
+          )
         case "complete":
-          return <TaskDisplay key={status.type} isComplete={true}>Add API to project <Text color="green">{status.workspaceName && status.projectName ? `${status.workspaceName}/${status.projectName}` : ""}</Text></TaskDisplay>
+          return <TaskDisplay key={status.type} isComplete={true}>Added API to project <Text color="green">{status.workspaceName && status.projectName ? `${status.workspaceName}/${status.projectName}` : ""}</Text></TaskDisplay>
         case "error":
           return <Text key={status.type}>Error: {status.error}</Text>
         default:

@@ -6,7 +6,7 @@ import {
 	ProjectWithWorkspace,
 	WorkspaceDefinition,
 } from "../api/types";
-import { loadProject } from "../common/project";
+import { loadProject, saveProject } from "../common/project";
 
 export type SelectProjectState =
 	| Checking
@@ -17,6 +17,7 @@ export type SelectProjectState =
 	| CreatingWorkspace
 	| CreateProject
 	| CreatingProject
+	| SavingProject
 	| Complete
 	| Error;
 
@@ -56,6 +57,11 @@ type CreateProject = {
 type CreatingProject = {
 	type: "creatingProject";
 	name: string;
+};
+
+type SavingProject = {
+	type: "savingProject";
+	project: ProjectWithWorkspace;
 };
 
 type Complete = {
@@ -156,16 +162,35 @@ export function useSelectProject(authToken: AuthToken): SelectProjectReturn {
 				return;
 			}
 
-			setStatuses((s) => [
-				...s,
-				{
-					type: "complete",
-					projectId: project.id,
-					projectName: project.name,
-					workspaceId: project.workspace.id,
-					workspaceName: project.workspace.name,
-				},
-			]);
+			async function save(proj: ProjectWithWorkspace) {
+				setStatuses((s) => [
+					...s,
+					{
+						type: "savingProject",
+						project: {
+							id: proj.id,
+							name: proj.name,
+							workspace: {
+								id: proj.workspace.id,
+								name: proj.workspace.name,
+							},
+						},
+					},
+				]);
+
+				await saveProject(proj.workspace.id, proj.id);
+				setStatuses((s) => [
+					...s,
+					{
+						type: "complete",
+						projectId: proj.id,
+						projectName: proj.name,
+						workspaceId: proj.workspace.id,
+						workspaceName: proj.workspace.name,
+					},
+				]);
+			}
+			save(project);
 		},
 		[workspaces]
 	);
@@ -232,6 +257,24 @@ export function useSelectProject(authToken: AuthToken): SelectProjectReturn {
 						workspace.id,
 						authToken
 					);
+
+					setStatuses((s) => [
+						...s,
+						{
+							type: "savingProject",
+							project: {
+								id: project.id,
+								name: project.name,
+								workspace: {
+									id: workspace.id,
+									name: workspace.name,
+								},
+							},
+						},
+					]);
+
+					await saveProject(workspace.id, project.id);
+
 					setStatuses((s) => [
 						...s,
 						{
