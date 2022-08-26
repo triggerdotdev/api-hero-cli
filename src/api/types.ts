@@ -10,27 +10,22 @@ import { z } from "zod";
 // 5. save the auth token to a file in the user directory (.apihero)
 // ... every request uses the token (first looks in an .env variable, then in the .apihero file)
 
-// project id flow
-// if trying to add an API and there isn't a project id, then the user is prompted to select a project, or create a new one if there aren't any
-// creates the apihero.json file in the project
-// apihero.json
-// {
-//   "projects": {
-//     "travel-app": "abcdef",
-//   },
-//   "defaultProject": "travel-app"
-// }
-
 export interface APIService {
 	authUrl: string;
+	// POST api/auth/requestTokens
 	createRequestToken(): Promise<string>;
+	// GET api/auth/requestTokens/$token
 	isAuthenticated(requestToken: string): Promise<AuthToken | undefined>;
+	// GET api/integrations?search=$query
 	searchAPIs(query: string, authToken: AuthToken): Promise<APIResult[]>;
+	// GET api/workspaces
 	getWorkspaces(authToken: AuthToken): Promise<ProjectWorkspaceResponse[]>;
+	// POST api/workspaces
 	createWorkspace(
 		name: string,
 		authToken: AuthToken
 	): Promise<WorkspaceDefinition>;
+	// POST api/workspaces/$workspaceId/projects
 	createProject(
 		name: string,
 		workspaceId: string,
