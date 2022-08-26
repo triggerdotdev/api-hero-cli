@@ -11,7 +11,7 @@ import {
 } from "../types";
 
 export class MockAPIService implements APIService {
-	authUrl = "http://localhost:3000/cli/auth";
+	authUrl = "http://localhost:3000/auth/cli";
 
 	private willAuthenticate: boolean;
 	private searchResults: APIResult[];
@@ -29,7 +29,7 @@ export class MockAPIService implements APIService {
 
 	async createRequestToken(): Promise<string> {
 		await resolveAfter(1);
-		return Promise.resolve("token");
+		return Promise.resolve("123456");
 	}
 
 	async isAuthenticated(_requestToken: string): Promise<AuthToken | undefined> {
