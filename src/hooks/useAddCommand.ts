@@ -16,21 +16,23 @@ type Authenticating = {
 
 type Searching = {
 	type: "searching";
-	query: string;
 } & WithAuth;
 
 type SelectingProject = {
 	type: "selectingProject";
-} & WithAuth;
+} & WithAuth &
+	WithAPIIntegration;
 
 type CreatingConnection = {
 	type: "creatingConnection";
 } & WithAuth &
+	WithAPIIntegration &
 	WithProjectIds;
 
 type AddingAPIAuthentication = {
 	type: "addingAPIAuthentication";
 } & WithAuth &
+	WithAPIIntegration &
 	WithProjectIds &
 	WithIntegrationId;
 
@@ -42,11 +44,16 @@ type Error = {
 type Complete = {
 	type: "complete";
 } & WithAuth &
+	WithAPIIntegration &
 	WithProjectIds &
 	WithIntegrationId;
 
 type WithAuth = {
 	authToken: AuthToken;
+};
+
+type WithAPIIntegration = {
+	apiIntegrationId: string;
 };
 
 type WithProjectIds = {

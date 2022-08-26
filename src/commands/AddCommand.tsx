@@ -5,7 +5,7 @@ import { AuthDisplay } from "../components/AuthDisplay";
 import { Logo } from "../components/Logo";
 import { SearchResults } from "../components/SearchResults";
 import { SelectProject } from "../components/SelectProject";
-import { AddCommandState, useAddCommand } from "../hooks/useAddCommand";
+import { useAddCommand } from "../hooks/useAddCommand";
 
 type CustomParams = [string];
 
@@ -31,23 +31,21 @@ function Add({ query }: { query: string }) {
 	return (
 		<Box flexDirection="column">
 			<Logo />
-			{states.map((state, index) => (<State key={index} state={state} query={query} setCurrentState={setCurrentState} />))}
+			{states.map((state) => {
+				switch (state.type) {
+					case "authenticating": {
+						return <AuthDisplay key={state.type} onComplete={authToken => setCurrentState({ type: "searching", authToken })} />;
+					}
+					case "searching": {
+						return <SearchResults key={state.type} query={query} onComplete={selectedApi => setCurrentState({ ...state, type: "selectingProject", apiIntegrationId: selectedApi })} />;
+					}
+					case "selectingProject": {
+						return <SelectProject key={state.type} authToken={state.authToken} onComplete={() => { }} />;
+					}
+					default:
+						return <></>;
+				}
+			})}
 		</Box>
 	);
-}
-
-function State({ state, query, setCurrentState }: { state: AddCommandState, query: string, setCurrentState: (state: AddCommandState) => void }) {
-	switch (state.type) {
-		case "authenticating": {
-			return <AuthDisplay onComplete={authToken => setCurrentState({ type: "searching", query: query, authToken })} />;
-		}
-		case "searching": {
-			return <SearchResults query={query} />;
-		}
-		case "selectingProject": {
-			return <SelectProject />;
-		}
-		default:
-			return <></>;
-	}
 }

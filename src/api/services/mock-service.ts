@@ -1,10 +1,13 @@
 import { resolveAfter } from "../../common/common";
+import { API } from "../api";
 import {
 	APIResult,
 	APIService,
 	AuthToken,
 	ProjectConfig,
+	ProjectDefinition,
 	ProjectWorkspaceResponse,
+	WorkspaceDefinition,
 } from "../types";
 
 export class MockAPIService implements APIService {
@@ -45,11 +48,27 @@ export class MockAPIService implements APIService {
 		return Promise.resolve(this.searchResults);
 	}
 
-	async getProjects(
+	async getWorkspaces(
 		_authToken: AuthToken
 	): Promise<ProjectWorkspaceResponse[]> {
 		await resolveAfter(2);
 		return Promise.resolve(this.projects);
+	}
+
+	async createWorkspace(
+		name: string,
+		_authToken: AuthToken
+	): Promise<WorkspaceDefinition> {
+		await resolveAfter(2);
+		return Promise.resolve({ id: "workspaceId", name });
+	}
+	async createProject(
+		name: string,
+		_workspaceId: string,
+		_authToken: AuthToken
+	): Promise<ProjectDefinition> {
+		await resolveAfter(2);
+		return Promise.resolve({ id: "projectId", name });
 	}
 }
 
@@ -76,6 +95,7 @@ export function createMockService({
 					documentationUrl:
 						"https://docs.github.com/en/rest/guides/getting-started-with-the-rest-api",
 					url: "https://docs.github.com/en/rest",
+					integrationId: "github",
 				},
 			];
 			break;
@@ -87,6 +107,7 @@ export function createMockService({
 					documentationUrl:
 						"https://docs.github.com/en/rest/guides/getting-started-with-the-rest-api",
 					url: "https://docs.github.com/en/rest",
+					integrationId: "github",
 				},
 				{
 					name: "GitLab",
@@ -94,6 +115,7 @@ export function createMockService({
 					documentationUrl:
 						"https://docs.github.com/en/rest/guides/getting-started-with-the-rest-api",
 					url: "https://docs.github.com/en/rest",
+					integrationId: "gitlab",
 				},
 			];
 			break;
@@ -106,32 +128,40 @@ export function createMockService({
 		case "one":
 			projectsItems = [
 				{
-					name: "Travel app",
-					id: "travel-app",
-					workspace: {
-						id: "my-company",
-						name: "My company",
-					},
+					id: "my-company",
+					name: "My company",
+
+					projects: [
+						{
+							name: "Travel app",
+							id: "travel-app",
+						},
+					],
 				},
 			];
 			break;
 		case "many":
 			projectsItems = [
 				{
-					name: "Travel app",
-					id: "travel-app",
-					workspace: {
-						id: "my-company",
-						name: "My company",
-					},
+					id: "my-company",
+					name: "My company",
+
+					projects: [
+						{
+							name: "Travel app",
+							id: "travel-app",
+						},
+					],
 				},
 				{
-					name: "Movie app",
-					id: "movie-app",
-					workspace: {
-						id: "my-other-company",
-						name: "My other company",
-					},
+					id: "my-other-company",
+					name: "My other company",
+					projects: [
+						{
+							name: "Movie app",
+							id: "movie-app",
+						},
+					],
 				},
 			];
 			break;

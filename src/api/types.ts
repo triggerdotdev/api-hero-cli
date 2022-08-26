@@ -26,7 +26,16 @@ export interface APIService {
 	createRequestToken(): Promise<string>;
 	isAuthenticated(requestToken: string): Promise<AuthToken | undefined>;
 	searchAPIs(query: string, authToken: AuthToken): Promise<APIResult[]>;
-	getProjects(authToken: AuthToken): Promise<ProjectWorkspaceResponse[]>;
+	getWorkspaces(authToken: AuthToken): Promise<ProjectWorkspaceResponse[]>;
+	createWorkspace(
+		name: string,
+		authToken: AuthToken
+	): Promise<WorkspaceDefinition>;
+	createProject(
+		name: string,
+		workspaceId: string,
+		authToken: AuthToken
+	): Promise<ProjectDefinition>;
 }
 
 export type AuthToken = {
@@ -38,15 +47,25 @@ export type APIResult = {
 	description: string;
 	documentationUrl: string;
 	url: string;
+	integrationId: string;
 };
 
-export type ProjectWorkspaceResponse = {
+export type WorkspaceDefinition = {
 	id: string;
 	name: string;
-	workspace: {
-		id: string;
-		name: string;
-	};
+};
+
+export type ProjectDefinition = {
+	id: string;
+	name: string;
+};
+
+export type ProjectWithWorkspace = ProjectDefinition & {
+	workspace: WorkspaceDefinition;
+};
+
+export type ProjectWorkspaceResponse = WorkspaceDefinition & {
+	projects: ProjectDefinition[];
 };
 
 export const projectConfigSchema = z.object({

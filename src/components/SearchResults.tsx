@@ -1,6 +1,6 @@
 import { Select } from "@boost/cli/react";
 import { Box, Text } from "ink";
-import React from "react";
+import React, { useEffect } from "react";
 import { APISearchStatus, useAPISearch } from "../hooks/useAPISearch"
 import { Cross } from "./Cross";
 import { TaskDisplay } from "./TaskDisplay";
@@ -8,30 +8,41 @@ import { Tick } from "./Tick";
 
 type SearchResultsProps = {
   query: string;
+  onComplete: (apiIntegrationId: string) => void;
 }
 
-export function SearchResults({ query }: SearchResultsProps) {
-  const [_state, allStates, selectedApi, setSelectedApi] = useAPISearch(query);
+export function SearchResults({ query, onComplete }: SearchResultsProps) {
+  const [state, allStates, selectedApi, setSelectedApi] = useAPISearch(query);
+
+  useEffect(() => {
+    if (selectedApi.type === "api") {
+      onComplete(selectedApi.integrationId);
+    }
+  }, [selectedApi]);
 
   return <Box flexDirection="column">
     {allStates.map((status, index) => {
       if (status.type === "results") {
         switch (selectedApi.type) {
           case "waiting": {
-            return <Box key="search-waiting" flexDirection="column"><Text>Found {status.results.length} results</Text><Select
-              label="Which API would you like to install"
-              onSubmit={(value) => {
-                const api = status.results.find(r => r.name === value);
+            return (
+              <Box key="search-waiting" flexDirection="column">
+                <Text>Found {status.results.length} results</Text>
+                <Select
+                  label="Which API would you like to install"
+                  onSubmit={(value) => {
+                    const api = status.results.find(r => r.name === value);
 
-                if (api) {
-                  setSelectedApi({ type: "api", ...api })
-                  return
-                }
-                setSelectedApi({ type: "none" })
+                    if (api) {
+                      setSelectedApi({ type: "api", ...api })
+                      return
+                    }
+                    setSelectedApi({ type: "none" })
 
-              }}
-              options={[...status.results.map(r => ({ label: <Text>{r.name} – <Text underline>{r.documentationUrl}</Text></Text>, value: r.name })), { label: "None of these", value: "" }]}
-            /></Box>
+                  }}
+                  options={[...status.results.map(r => ({ label: <Text>{r.name} – <Text underline>{r.documentationUrl}</Text></Text>, value: r.name })), { label: "None of these", value: "" }]}
+                />
+              </Box>)
           }
           case "api": {
             return <Text key="selected-api"><Tick /> You selected <Text color="green">{selectedApi.name} – <Text underline>{selectedApi.documentationUrl}</Text></Text></Text>

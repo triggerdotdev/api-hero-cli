@@ -5,6 +5,8 @@ import {
 	ProjectConfig,
 	AuthToken,
 	ProjectWorkspaceResponse,
+	ProjectDefinition,
+	WorkspaceDefinition,
 } from "./types";
 
 export class API implements APIService {
@@ -28,7 +30,21 @@ export class API implements APIService {
 		return API.currentAPI.searchAPIs(query, authToken);
 	}
 
-	getProjects(authToken: AuthToken): Promise<ProjectWorkspaceResponse[]> {
-		return API.currentAPI.getProjects(authToken);
+	getWorkspaces(authToken: AuthToken): Promise<ProjectWorkspaceResponse[]> {
+		return API.currentAPI.getWorkspaces(authToken);
+	}
+
+	createWorkspace(
+		name: string,
+		authToken: AuthToken
+	): Promise<WorkspaceDefinition> {
+		return API.currentAPI.createWorkspace(name, authToken);
+	}
+	createProject(
+		name: string,
+		workspaceId: string,
+		authToken: AuthToken
+	): Promise<ProjectDefinition> {
+		return API.currentAPI.createProject(name, workspaceId, authToken);
 	}
 }
