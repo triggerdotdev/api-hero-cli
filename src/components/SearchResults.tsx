@@ -48,7 +48,7 @@ export function SearchResults({ query, onComplete }: SearchResultsProps) {
             return <Text key="selected-api"><Tick /> You selected <Text color="green">{selectedApi.name} – <Text underline>{selectedApi.documentationUrl}</Text></Text></Text>
           }
           case "none": {
-            return <Text key="no-selected-api"><Cross /> You selected no API</Text>
+            return <Text key="no-selected-api"><Cross /> You selected no API. Currently we don't support adding new APIs, but will in the future.</Text>
           }
         }
       }
