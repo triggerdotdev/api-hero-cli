@@ -97,10 +97,9 @@ export function useAuth(): Auth {
 async function pollForAuthenticated(requestToken: string): Promise<AuthToken> {
 	return new Promise((resolve) => {
 		const pollDelay = 2000;
-		let authToken: AuthToken | undefined;
 		const interval = setInterval(async () => {
-			authToken = await api.isAuthenticated(requestToken);
-			if (authToken) {
+			const authToken = await api.isAuthenticated(requestToken);
+			if (authToken !== undefined) {
 				clearInterval(interval);
 				resolve(authToken);
 			}

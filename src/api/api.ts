@@ -1,4 +1,5 @@
 import { createMockService } from "./services/mock-service";
+import { WebService } from "./services/web-service";
 import {
 	APIService,
 	APIResult,
@@ -10,11 +11,13 @@ import {
 } from "./types";
 
 export class API implements APIService {
-	static currentAPI: APIService = createMockService({
-		willAuthenticate: true,
-		searchResults: "many",
-		projects: "one",
-	});
+	// static currentAPI: APIService = createMockService({
+	// 	willAuthenticate: true,
+	// 	searchResults: "many",
+	// 	projects: "one",
+	// });
+
+	static currentAPI: APIService = new WebService("http://localhost:3000");
 
 	authUrl: string = API.currentAPI.authUrl;
 
