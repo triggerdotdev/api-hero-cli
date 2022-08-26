@@ -78,11 +78,8 @@ type SelectProjectReturn = {
 	selectedWorkspace: (
 		selectedWorkspace: WorkspaceDefinition | undefined
 	) => void;
-	createWorkspace: (createWorkspace: string) => void;
-	createProject: (
-		workspace: WorkspaceDefinition,
-		createProject: string
-	) => void;
+	createWorkspace: (name: string) => void;
+	createProject: (workspace: WorkspaceDefinition, name: string) => void;
 };
 
 const api = new API();

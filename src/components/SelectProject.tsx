@@ -1,4 +1,4 @@
-import { Select } from "@boost/cli/react";
+import { Input, Select } from "@boost/cli/react";
 import { Box, Text } from "ink";
 import React, { useEffect } from "react";
 import { AuthToken, ProjectConfig } from "../api/types";
@@ -40,7 +40,7 @@ export function SelectProject({ authToken, onComplete }: SelectProjectProps) {
               return (
                 <Box key={status.type} flexDirection="column">
                   <Select
-                    label="Which API would you like to install"
+                    label="Which API Hero project would you like to add this API to?"
                     onSubmit={(value) => {
                       const project = status.projects.find(r => r.id === value);
                       selectedProject(project);
@@ -65,7 +65,7 @@ export function SelectProject({ authToken, onComplete }: SelectProjectProps) {
             return (
               <Box key={status.type} flexDirection="column">
                 <Select
-                  label="Select workspace to create a project in"
+                  label="Select an API Hero workspace to create a project in"
                   onSubmit={(value) => {
                     const workspace = status.workspaces.find(r => r.id === value);
                     selectedWorkspace(workspace);
@@ -83,11 +83,45 @@ export function SelectProject({ authToken, onComplete }: SelectProjectProps) {
               </Box>)
           }
         case "createWorkspace":
-          return <TaskDisplay key={status.type} isComplete={isComplete}>Creating workspace…</TaskDisplay>
+          if (isComplete) {
+            return <React.Fragment key={status.type}></React.Fragment>
+          } else {
+            return <Input
+              key={status.type}
+              label="What would you like to call your new workspace?"
+              placeholder="<workspace name>"
+              onSubmit={createWorkspace}
+            />
+          }
+        case "creatingWorkspace":
+          return (
+            <TaskDisplay key={status.type} isComplete={isComplete}>
+              {isComplete ?
+                <Text>Created workspace <Text color="green">{status.name}</Text></Text>
+                : `Creating workspace ${status.name}`}
+            </TaskDisplay>
+          )
+        case "createProject":
+          return <Input
+            key={status.type}
+            label="What would you like to call your new project?"
+            placeholder="<project name>"
+            onSubmit={(name) => createProject({ id: status.workspaceId, name: status.workspaceName }, name)}
+          />
+        case "creatingProject":
+          return (
+            <TaskDisplay key={status.type} isComplete={isComplete}>
+              {isComplete ?
+                <Text>Created project <Text color="green">{status.name}</Text></Text>
+                : `Creating project ${status.name}`}
+            </TaskDisplay>
+          )
         case "complete":
-          return <TaskDisplay key={status.type} isComplete={true}>Selected project <Text color="green">{status.workspaceName && status.projectName ? `${status.workspaceName}/${status.projectName}` : ""}</Text></TaskDisplay>
+          return <TaskDisplay key={status.type} isComplete={true}>Add API to project <Text color="green">{status.workspaceName && status.projectName ? `${status.workspaceName}/${status.projectName}` : ""}</Text></TaskDisplay>
+        case "error":
+          return <Text key={status.type}>Error: {status.error}</Text>
         default:
-          return <Text key={status.type}></Text>
+          throw new Error(`Unknown status: ${JSON.stringify(status)}`);
       }
     })}
   </Box>;
