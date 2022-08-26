@@ -39,7 +39,6 @@ export function SelectProject({ authToken, onComplete }: SelectProjectProps) {
             } else {
               return (
                 <Box key={status.type} flexDirection="column">
-                  <Text>Found {status.projects.length} projects</Text>
                   <Select
                     label="Which API would you like to install"
                     onSubmit={(value) => {
@@ -59,7 +58,32 @@ export function SelectProject({ authToken, onComplete }: SelectProjectProps) {
                 </Box>)
             }
           }
-          break;
+        case "selectWorkspace":
+          if (isComplete) {
+            return <React.Fragment key="selectWorkspaceComplete"></React.Fragment>
+          } else {
+            return (
+              <Box key={status.type} flexDirection="column">
+                <Select
+                  label="Select workspace to create a project in"
+                  onSubmit={(value) => {
+                    const workspace = status.workspaces.find(r => r.id === value);
+                    selectedWorkspace(workspace);
+                  }}
+                  options={[
+                    ...status.workspaces.map(r => (
+                      {
+                        label:
+                          <Text>{r.name}</Text>,
+                        value: r.id
+                      }
+                    )),
+                    { label: "Create a new workspace", value: "" }]}
+                />
+              </Box>)
+          }
+        case "createWorkspace":
+          return <TaskDisplay key={status.type} isComplete={isComplete}>Creating workspace…</TaskDisplay>
         case "complete":
           return <TaskDisplay key={status.type} isComplete={true}>Selected project <Text color="green">{status.workspaceName && status.projectName ? `${status.workspaceName}/${status.projectName}` : ""}</Text></TaskDisplay>
         default:

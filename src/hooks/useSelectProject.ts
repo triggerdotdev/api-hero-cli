@@ -35,6 +35,7 @@ type SelectProject = {
 
 type SelectWorkspace = {
 	type: "selectWorkspace";
+	workspaces: WorkspaceDefinition[];
 };
 
 type CreateWorkspace = {
@@ -74,7 +75,9 @@ type SelectProjectReturn = {
 	currentState: SelectProjectState;
 	allStates: SelectProjectState[];
 	selectedProject: (project: ProjectWithWorkspace | undefined) => void;
-	selectedWorkspace: (selectedWorkspace: WorkspaceDefinition) => void;
+	selectedWorkspace: (
+		selectedWorkspace: WorkspaceDefinition | undefined
+	) => void;
 	createWorkspace: (createWorkspace: string) => void;
 	createProject: (
 		workspace: WorkspaceDefinition,
@@ -88,6 +91,7 @@ export function useSelectProject(authToken: AuthToken): SelectProjectReturn {
 	const [statuses, setStatuses] = useState<SelectProjectState[]>([
 		{ type: "checking" },
 	]);
+	const [workspaces, setWorkspaces] = useState<WorkspaceDefinition[]>([]);
 
 	useEffect(() => {
 		async function selectProject() {
@@ -106,6 +110,8 @@ export function useSelectProject(authToken: AuthToken): SelectProjectReturn {
 
 				setStatuses((s) => [...s, { type: "fetchingProjects" }]);
 				const workspaces = await api.getWorkspaces(authToken);
+				setWorkspaces(workspaces);
+
 				const projects: ProjectWithWorkspace[] = workspaces.flatMap(
 					(workspace) => {
 						return workspace.projects.map((project) => {
@@ -123,7 +129,14 @@ export function useSelectProject(authToken: AuthToken): SelectProjectReturn {
 				setStatuses((s) => [...s, { type: "selectProject", projects }]);
 
 				if (projects.length === 0) {
-					setStatuses((s) => [...s, { type: "createWorkspace" }]);
+					if (workspaces.length === 0) {
+						setStatuses((s) => [...s, { type: "createWorkspace" }]);
+					} else {
+						setStatuses((s) => [
+							...s,
+							{ type: "selectWorkspace", workspaces: workspaces },
+						]);
+					}
 				}
 			} catch (error) {
 				setStatuses((s) => [...s, { type: "error", error }]);
@@ -135,7 +148,14 @@ export function useSelectProject(authToken: AuthToken): SelectProjectReturn {
 	const selectProject = useCallback(
 		(project: ProjectWithWorkspace | undefined) => {
 			if (project === undefined) {
-				setStatuses((s) => [...s, { type: "selectWorkspace" }]);
+				if (workspaces.length === 0) {
+					setStatuses((s) => [...s, { type: "createWorkspace" }]);
+				} else {
+					setStatuses((s) => [
+						...s,
+						{ type: "selectWorkspace", workspaces: workspaces },
+					]);
+				}
 				return;
 			}
 
@@ -150,19 +170,26 @@ export function useSelectProject(authToken: AuthToken): SelectProjectReturn {
 				},
 			]);
 		},
-		[]
+		[workspaces]
 	);
 
-	const selectWorkspace = useCallback((workspace: WorkspaceDefinition) => {
-		setStatuses((s) => [
-			...s,
-			{
-				type: "createProject",
-				workspaceId: workspace.id,
-				workspaceName: workspace.name,
-			},
-		]);
-	}, []);
+	const selectWorkspace = useCallback(
+		(workspace: WorkspaceDefinition | undefined) => {
+			if (workspace === undefined) {
+				setStatuses((s) => [...s, { type: "createWorkspace" }]);
+			} else {
+				setStatuses((s) => [
+					...s,
+					{
+						type: "createProject",
+						workspaceId: workspace.id,
+						workspaceName: workspace.name,
+					},
+				]);
+			}
+		},
+		[]
+	);
 
 	const createWorkspace = useCallback((name: string) => {
 		setStatuses((s) => [
