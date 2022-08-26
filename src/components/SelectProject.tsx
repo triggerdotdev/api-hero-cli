@@ -21,40 +21,47 @@ export function SelectProject({ authToken, onComplete }: SelectProjectProps) {
 
   return <Box flexDirection="column">
     {allStates.map((status, index) => {
+      const isComplete = index < allStates.length - 1;
       switch (status.type) {
         case "checking":
-          return <Text key={status.type}>Checking for linked project</Text>
+          return <TaskDisplay key={status.type} isComplete={isComplete}>Checking for linked project</TaskDisplay>
         case "fetchingProjects":
           return (
             <Box key={status.type} flexDirection="column">
-              <Text>No linked project</Text>
-              <TaskDisplay isComplete={index < allStates.length - 1}>Fetching your projects…</TaskDisplay>
+              <TaskDisplay isComplete={isComplete}>No linked project, fetching your projects…</TaskDisplay>
             </Box>)
         case "selectProject":
           if (status.projects.length === 0) {
             return <Text key={status.type}>No projects found, let’s create one</Text>
           } else {
-            return (
-              <Box key={status.type} flexDirection="column">
-                <Text>Found {status.projects.length} projects</Text>
-                <Select
-                  label="Which API would you like to install"
-                  onSubmit={(value) => {
-                    const project = status.projects.find(r => r.id === value);
-                    selectedProject(project);
-                  }}
-                  options={[
-                    ...status.projects.map(r => (
-                      {
-                        label:
-                          <Text>{r.workspace.name}/<Text>{r.name}</Text></Text>,
-                        value: r.id
-                      }
-                    )),
-                    { label: "Create a new project", value: "" }]}
-                />
-              </Box>)
+            if (isComplete) {
+              return <React.Fragment key="selectProjectComplete"></React.Fragment>
+            } else {
+              return (
+                <Box key={status.type} flexDirection="column">
+                  <Text>Found {status.projects.length} projects</Text>
+                  <Select
+                    label="Which API would you like to install"
+                    onSubmit={(value) => {
+                      const project = status.projects.find(r => r.id === value);
+                      selectedProject(project);
+                    }}
+                    options={[
+                      ...status.projects.map(r => (
+                        {
+                          label:
+                            <Text>{r.workspace.name}/<Text>{r.name}</Text></Text>,
+                          value: r.id
+                        }
+                      )),
+                      { label: "Create a new project", value: "" }]}
+                  />
+                </Box>)
+            }
           }
+          break;
+        case "complete":
+          return <TaskDisplay key={status.type} isComplete={true}>Selected project <Text color="green">{status.workspaceName && status.projectName ? `${status.workspaceName}/${status.projectName}` : ""}</Text></TaskDisplay>
         default:
           return <Text key={status.type}></Text>
       }
