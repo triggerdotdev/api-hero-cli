@@ -101,17 +101,59 @@ export class WebService implements APIService {
 		}
 	}
 
-	createWorkspace(
-		_name: string,
-		_authToken: AuthToken
+	async createWorkspace(
+		name: string,
+		authToken: AuthToken
 	): Promise<WorkspaceDefinition> {
-		throw new Error("Method not implemented.");
+		try {
+			const response = await fetch(`${this.baseUrl}/api/workspaces`, {
+				method: "POST",
+				headers: {
+					Authorization: `Bearer ${authToken.tokenId}`,
+				},
+				body: JSON.stringify({
+					name,
+				}),
+			});
+
+			if (response.ok && response.status === 200) {
+				const data = await response.json();
+				return data;
+			}
+
+			throw `${response.status} ${response.statusText}`;
+		} catch (error) {
+			throw error;
+		}
 	}
-	createProject(
-		_name: string,
-		_workspaceId: string,
-		_authToken: AuthToken
+
+	async createProject(
+		name: string,
+		workspaceId: string,
+		authToken: AuthToken
 	): Promise<ProjectDefinition> {
-		throw new Error("Method not implemented.");
+		try {
+			const response = await fetch(
+				`${this.baseUrl}/api/workspaces/${workspaceId}/projects`,
+				{
+					method: "POST",
+					headers: {
+						Authorization: `Bearer ${authToken.tokenId}`,
+					},
+					body: JSON.stringify({
+						name,
+					}),
+				}
+			);
+
+			if (response.ok && response.status === 200) {
+				const data = await response.json();
+				return data;
+			}
+
+			throw `${response.status} ${response.statusText}`;
+		} catch (error) {
+			throw error;
+		}
 	}
 }
