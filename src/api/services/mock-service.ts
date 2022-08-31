@@ -96,6 +96,7 @@ export function createMockService({
 						"https://docs.github.com/en/rest/guides/getting-started-with-the-rest-api",
 					url: "https://docs.github.com/en/rest",
 					integrationId: "github",
+					packageName: "@apihero/github",
 				},
 			];
 			break;
@@ -108,6 +109,7 @@ export function createMockService({
 						"https://docs.github.com/en/rest/guides/getting-started-with-the-rest-api",
 					url: "https://docs.github.com/en/rest",
 					integrationId: "github",
+					packageName: "@apihero/github",
 				},
 				{
 					name: "GitLab",
@@ -116,6 +118,7 @@ export function createMockService({
 						"https://docs.github.com/en/rest/guides/getting-started-with-the-rest-api",
 					url: "https://docs.github.com/en/rest",
 					integrationId: "gitlab",
+					packageName: "@apihero/gitlab",
 				},
 			];
 			break;

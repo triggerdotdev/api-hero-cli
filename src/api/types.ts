@@ -43,6 +43,7 @@ export type APIResult = {
 	documentationUrl: string;
 	url: string;
 	integrationId: string;
+	packageName: string;
 };
 
 export type WorkspaceDefinition = {

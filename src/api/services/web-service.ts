@@ -56,8 +56,27 @@ export class WebService implements APIService {
 		}
 	}
 
-	searchAPIs(_query: string, _authToken: AuthToken): Promise<APIResult[]> {
-		throw new Error("Method not implemented.");
+	async searchAPIs(query: string, authToken: AuthToken): Promise<APIResult[]> {
+		try {
+			const response = await fetch(
+				`${this.baseUrl}/api/integrations?query=${query}`,
+				{
+					method: "GET",
+					headers: {
+						Authorization: `Bearer ${authToken.tokenId}`,
+					},
+				}
+			);
+
+			if (response.ok && response.status === 200) {
+				const data = await response.json();
+				return data;
+			}
+
+			throw `${response.status} ${response.statusText}`;
+		} catch (error) {
+			throw error;
+		}
 	}
 
 	getWorkspaces(_authToken: AuthToken): Promise<ProjectWorkspaceResponse[]> {
