@@ -122,7 +122,7 @@ export function useSelectProject(authToken: AuthToken): SelectProjectReturn {
 								...project,
 								workspace: {
 									id: workspace.id,
-									name: workspace.name,
+									title: workspace.title,
 								},
 							};
 						});
@@ -169,10 +169,10 @@ export function useSelectProject(authToken: AuthToken): SelectProjectReturn {
 						type: "savingProject",
 						project: {
 							id: proj.id,
-							name: proj.name,
+							title: proj.title,
 							workspace: {
 								id: proj.workspace.id,
-								name: proj.workspace.name,
+								title: proj.workspace.title,
 							},
 						},
 					},
@@ -184,9 +184,9 @@ export function useSelectProject(authToken: AuthToken): SelectProjectReturn {
 					{
 						type: "complete",
 						projectId: proj.id,
-						projectName: proj.name,
+						projectName: proj.title,
 						workspaceId: proj.workspace.id,
-						workspaceName: proj.workspace.name,
+						workspaceName: proj.workspace.title,
 					},
 				]);
 			}
@@ -205,7 +205,7 @@ export function useSelectProject(authToken: AuthToken): SelectProjectReturn {
 					{
 						type: "createProject",
 						workspaceId: workspace.id,
-						workspaceName: workspace.name,
+						workspaceName: workspace.title,
 					},
 				]);
 			}
@@ -230,7 +230,7 @@ export function useSelectProject(authToken: AuthToken): SelectProjectReturn {
 					{
 						type: "createProject",
 						workspaceId: workspace.id,
-						workspaceName: workspace.name,
+						workspaceName: workspace.title,
 					},
 				]);
 			} catch (error) {
@@ -264,10 +264,10 @@ export function useSelectProject(authToken: AuthToken): SelectProjectReturn {
 							type: "savingProject",
 							project: {
 								id: project.id,
-								name: project.name,
+								title: project.title,
 								workspace: {
 									id: workspace.id,
-									name: workspace.name,
+									title: workspace.title,
 								},
 							},
 						},
@@ -280,9 +280,9 @@ export function useSelectProject(authToken: AuthToken): SelectProjectReturn {
 						{
 							type: "complete",
 							workspaceId: workspace.id,
-							workspaceName: workspace.name,
+							workspaceName: workspace.title,
 							projectId: project.id,
-							projectName: project.name,
+							projectName: project.title,
 						},
 					]);
 				} catch (error) {

@@ -132,11 +132,11 @@ export function createMockService({
 			projectsItems = [
 				{
 					id: "my-company",
-					name: "My company",
+					title: "My company",
 
 					projects: [
 						{
-							name: "Travel app",
+							title: "Travel app",
 							id: "travel-app",
 						},
 					],
@@ -147,21 +147,21 @@ export function createMockService({
 			projectsItems = [
 				{
 					id: "my-company",
-					name: "My company",
+					title: "My company",
 
 					projects: [
 						{
-							name: "Travel app",
+							title: "Travel app",
 							id: "travel-app",
 						},
 					],
 				},
 				{
 					id: "my-other-company",
-					name: "My other company",
+					title: "My other company",
 					projects: [
 						{
-							name: "Movie app",
+							title: "Movie app",
 							id: "movie-app",
 						},
 					],

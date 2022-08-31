@@ -79,8 +79,26 @@ export class WebService implements APIService {
 		}
 	}
 
-	getWorkspaces(_authToken: AuthToken): Promise<ProjectWorkspaceResponse[]> {
-		throw new Error("Method not implemented.");
+	async getWorkspaces(
+		authToken: AuthToken
+	): Promise<ProjectWorkspaceResponse[]> {
+		try {
+			const response = await fetch(`${this.baseUrl}/api/workspaces`, {
+				method: "GET",
+				headers: {
+					Authorization: `Bearer ${authToken.tokenId}`,
+				},
+			});
+
+			if (response.ok && response.status === 200) {
+				const data = await response.json();
+				return data;
+			}
+
+			throw `${response.status} ${response.statusText}`;
+		} catch (error) {
+			throw error;
+		}
 	}
 
 	createWorkspace(

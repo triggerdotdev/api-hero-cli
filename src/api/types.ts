@@ -12,11 +12,8 @@ import { z } from "zod";
 
 export interface APIService {
 	authUrl: string;
-	// POST api/auth/requestTokens
 	createRequestToken(): Promise<string>;
-	// GET api/auth/requestTokens/$token
 	isAuthenticated(requestToken: string): Promise<AuthToken | undefined>;
-	// GET api/integrations?search=$query
 	searchAPIs(query: string, authToken: AuthToken): Promise<APIResult[]>;
 	// GET api/workspaces
 	getWorkspaces(authToken: AuthToken): Promise<ProjectWorkspaceResponse[]>;
@@ -48,12 +45,12 @@ export type APIResult = {
 
 export type WorkspaceDefinition = {
 	id: string;
-	name: string;
+	title: string;
 };
 
 export type ProjectDefinition = {
 	id: string;
-	name: string;
+	title: string;
 };
 
 export type ProjectWithWorkspace = ProjectDefinition & {

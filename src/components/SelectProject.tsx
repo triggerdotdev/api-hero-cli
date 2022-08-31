@@ -49,7 +49,7 @@ export function SelectProject({ authToken, onComplete }: SelectProjectProps) {
                       ...status.projects.map(r => (
                         {
                           label:
-                            <Text>{r.workspace.name}/<Text>{r.name}</Text></Text>,
+                            <Text>{r.workspace.title}/<Text>{r.title}</Text></Text>,
                           value: r.id
                         }
                       )),
@@ -74,7 +74,7 @@ export function SelectProject({ authToken, onComplete }: SelectProjectProps) {
                     ...status.workspaces.map(r => (
                       {
                         label:
-                          <Text>{r.name}</Text>,
+                          <Text>{r.title}</Text>,
                         value: r.id
                       }
                     )),
@@ -109,7 +109,7 @@ export function SelectProject({ authToken, onComplete }: SelectProjectProps) {
               key={status.type}
               label="What would you like to call your new project?"
               placeholder="<project name>"
-              onSubmit={(name) => createProject({ id: status.workspaceId, name: status.workspaceName }, name)}
+              onSubmit={(name) => createProject({ id: status.workspaceId, title: status.workspaceName }, name)}
             />
           }
         case "creatingProject":
