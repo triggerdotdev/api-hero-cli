@@ -40,12 +40,12 @@ export function SearchResults({ query, onComplete }: SearchResultsProps) {
                     setSelectedApi({ type: "none" })
 
                   }}
-                  options={[...status.results.map(r => ({ label: <Text>{r.name} – <Text underline>{r.documentationUrl}</Text></Text>, value: r.name })), { label: "None of these", value: "" }]}
+                  options={[...status.results.map(r => ({ label: <Text>{r.name} – <Text>{r.description}</Text></Text>, value: r.name })), { label: "None of these", value: "" }]}
                 />
               </Box>)
           }
           case "api": {
-            return <Text key="selected-api"><Tick /> You selected <Text color="green">{selectedApi.name} – <Text underline>{selectedApi.documentationUrl}</Text></Text></Text>
+            return <Text key="selected-api"><Tick /> You selected <Text color="green">{selectedApi.name} – <Text underline>{selectedApi.officialDocumentation}</Text></Text></Text>
           }
           case "none": {
             return <Text key="no-selected-api"><Cross /> You selected no API. Currently we don't support adding new APIs, but will in the future.</Text>

@@ -92,7 +92,7 @@ export function createMockService({
 				{
 					name: "GitHub",
 					description: "The world's most popular source code hosting service.",
-					documentationUrl:
+					officialDocumentation:
 						"https://docs.github.com/en/rest/guides/getting-started-with-the-rest-api",
 					url: "https://docs.github.com/en/rest",
 					integrationId: "github",
@@ -105,7 +105,7 @@ export function createMockService({
 				{
 					name: "GitHub",
 					description: "The world's most popular source code hosting service.",
-					documentationUrl:
+					officialDocumentation:
 						"https://docs.github.com/en/rest/guides/getting-started-with-the-rest-api",
 					url: "https://docs.github.com/en/rest",
 					integrationId: "github",
@@ -114,7 +114,7 @@ export function createMockService({
 				{
 					name: "GitLab",
 					description: "The world's most popular source code hosting service.",
-					documentationUrl:
+					officialDocumentation:
 						"https://docs.github.com/en/rest/guides/getting-started-with-the-rest-api",
 					url: "https://docs.github.com/en/rest",
 					integrationId: "gitlab",

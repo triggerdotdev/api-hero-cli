@@ -40,7 +40,7 @@ export type AuthToken = {
 export type APIResult = {
 	name: string;
 	description: string;
-	documentationUrl: string;
+	officialDocumentation: string | null;
 	url: string;
 	integrationId: string;
 	packageName: string;
