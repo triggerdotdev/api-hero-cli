@@ -1,12 +1,11 @@
 import { useState } from "react";
-import { AuthToken } from "../api/types";
+import { APIResult, AuthToken } from "../api/types";
 
 export type AddCommandState =
 	| Authenticating
 	| Searching
 	| SelectingProject
-	| CreatingConnection
-	| AddingAPIAuthentication
+	| AddingAPI
 	| Complete
 	| Error;
 
@@ -23,18 +22,11 @@ type SelectingProject = {
 } & WithAuth &
 	WithAPIIntegration;
 
-type CreatingConnection = {
-	type: "creatingConnection";
+type AddingAPI = {
+	type: "addingAPI";
 } & WithAuth &
 	WithAPIIntegration &
 	WithProjectIds;
-
-type AddingAPIAuthentication = {
-	type: "addingAPIAuthentication";
-} & WithAuth &
-	WithAPIIntegration &
-	WithProjectIds &
-	WithIntegrationId;
 
 type Error = {
 	type: "error";
@@ -52,9 +44,7 @@ type WithAuth = {
 	authToken: AuthToken;
 };
 
-type WithAPIIntegration = {
-	apiIntegrationId: string;
-};
+type WithAPIIntegration = { api: APIResult };
 
 type WithProjectIds = {
 	workspaceId: string;

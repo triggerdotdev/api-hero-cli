@@ -1,6 +1,7 @@
 import { Select } from "@boost/cli/react";
 import { Box, Text } from "ink";
 import React, { useEffect } from "react";
+import { APIResult } from "../api/types";
 import { APISearchStatus, useAPISearch } from "../hooks/useAPISearch"
 import { Cross } from "./Cross";
 import { TaskDisplay } from "./TaskDisplay";
@@ -8,7 +9,7 @@ import { Tick } from "./Tick";
 
 type SearchResultsProps = {
   query: string;
-  onComplete: (apiIntegrationId: string) => void;
+  onComplete: (api: APIResult) => void;
 }
 
 export function SearchResults({ query, onComplete }: SearchResultsProps) {
@@ -16,7 +17,7 @@ export function SearchResults({ query, onComplete }: SearchResultsProps) {
 
   useEffect(() => {
     if (selectedApi.type === "api") {
-      onComplete(selectedApi.integrationId);
+      onComplete(selectedApi);
     }
   }, [selectedApi]);
 

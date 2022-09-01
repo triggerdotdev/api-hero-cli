@@ -1,6 +1,7 @@
 import { Arg, Command, GlobalOptions } from "@boost/cli";
 import { Box } from "ink";
 import React from "react";
+import { AddingAPI } from "../components/AddingAPI";
 import { AuthDisplay } from "../components/AuthDisplay";
 import { Logo } from "../components/Logo";
 import { SearchResults } from "../components/SearchResults";
@@ -37,10 +38,13 @@ function Add({ query }: { query: string }) {
 						return <AuthDisplay key={state.type} onComplete={authToken => setCurrentState({ type: "searching", authToken })} />;
 					}
 					case "searching": {
-						return <SearchResults key={state.type} query={query} onComplete={selectedApi => setCurrentState({ ...state, type: "selectingProject", apiIntegrationId: selectedApi })} />;
+						return <SearchResults key={state.type} query={query} onComplete={selectedApi => setCurrentState({ ...state, type: "selectingProject", api: selectedApi })} />;
 					}
 					case "selectingProject": {
-						return <SelectProject key={state.type} authToken={state.authToken} onComplete={() => { }} />;
+						return <SelectProject key={state.type} authToken={state.authToken} onComplete={(project) => { setCurrentState({ ...state, type: "addingAPI", projectId: project.projectId, workspaceId: project.workspaceId }) }} />;
+					}
+					case "addingAPI": {
+						return <AddingAPI key={state.type} authToken={state.authToken} projectId={state.projectId} workspaceId={state.workspaceId} api={state.api} />;
 					}
 					default:
 						return <></>;
