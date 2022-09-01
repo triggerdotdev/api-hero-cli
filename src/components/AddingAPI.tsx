@@ -1,4 +1,4 @@
-import { Box, Text } from "ink";
+import { Box, Newline, Text } from "ink";
 import React from "react";
 import { APIResult, AuthToken } from "../api/types";
 import { useAddAPI } from "../hooks/useAddAPI";
@@ -13,7 +13,7 @@ type AddingAPIProps = {
 }
 
 export function AddingAPI({ authToken, projectId, workspaceId, api }: AddingAPIProps) {
-  const { currentState, allStates } = useAddAPI(authToken, api, { projectId, workspaceId: workspaceId });
+  const { allStates } = useAddAPI(authToken, api, { projectId, workspaceId: workspaceId });
 
   return <Box flexDirection="column">
     {allStates.map((status, index) => {
@@ -25,9 +25,12 @@ export function AddingAPI({ authToken, projectId, workspaceId, api }: AddingAPIP
           return <TaskDisplay key={status.type} isComplete={isComplete}>Connecting {api.name} to project</TaskDisplay>
         case "complete":
           return (
-            <Box flexDirection="column" key={status.type}>
-              <Text color="green"><Tick /> {api.name} has been added to your project</Text>
-              <Text>Add authentication here: <Text color="gray" underline>{status.client.authenticationUrl}</Text></Text>
+            <Box flexDirection="column" key={status.type} marginTop={1}>
+              <Text><Tick /><Text color="green"> Success:</Text> {api.name} has been added to your project</Text>
+              <Text><Newline /></Text>
+              <Text>Now add authentication:</Text>
+              <Text color="gray" underline>{status.client.authenticationUrl}</Text>
+              <Text><Newline /></Text>
             </Box>)
         case "error":
           return <Text key={status.type} color="red">Error: {JSON.stringify(status.error)}</Text>

@@ -23,6 +23,8 @@
 		"@npmcli/promise-spawn": "^3.0.0",
 		"dotenv": "^16.0.1",
 		"ink": "^3.2.0",
+		"ink-big-text": "^1.2.0",
+		"ink-gradient": "^2.0.0",
 		"ink-spinner": "^4.0.3",
 		"react": "^17.0.2",
 		"tiny-invariant": "^1.2.0",
@@ -48,6 +50,8 @@
 	"devDependencies": {
 		"@ava/typescript": "^3.0.1",
 		"@sindresorhus/tsconfig": "^3.0.1",
+		"@types/ink-big-text": "^1.2.1",
+		"@types/ink-gradient": "^2.0.1",
 		"@types/pacote": "^11.1.5",
 		"@types/react": "^18.0.17",
 		"ava": "^4.3.1",

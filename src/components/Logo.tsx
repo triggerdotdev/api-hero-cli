@@ -1,13 +1,14 @@
 import React from "react";
-import { Box, Text } from "ink";
+import { Box } from "ink";
+import Gradient from 'ink-gradient';
+import BigText from 'ink-big-text';
 
 export function Logo() {
 	return (
-		<Box flexDirection="column" marginBottom={1}>
-			<Text>    _   ___ ___   _  _</Text>
-			<Text>   /_\ | _ \_ _| | || |___ _ _ ___</Text>
-			<Text>  / _ \|  _/| |  | __ / -_) '_/ _ \</Text>
-			<Text> /_/ \_\_| |___| |_||_\___|_| \___/</Text>
+		<Box flexDirection="column" marginBottom={0}>
+			<Gradient name="instagram">
+				<BigText text="API Hero" font="tiny" lineHeight={0} />
+			</Gradient>
 		</Box>
 	);
 }
