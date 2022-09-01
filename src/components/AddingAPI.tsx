@@ -20,6 +20,8 @@ export function AddingAPI({ authToken, projectId, workspaceId, api }: AddingAPIP
       switch (status.type) {
         case "installingPackage":
           return <TaskDisplay key={status.type} isComplete={isComplete}>Installing package {api.packageName}</TaskDisplay>
+        case "linkingAPIToProject":
+          return <TaskDisplay key={status.type} isComplete={isComplete}>Linking API to project</TaskDisplay>
         default:
           throw new Error(`Unknown status: ${JSON.stringify(status)}`);
       }

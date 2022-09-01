@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { API } from "../api/api";
 import { APIResult, AuthToken, ProjectConfig } from "../api/types";
+import { extract } from "pacote";
 
 export type AddAPIState =
 	| InstallingPackage
@@ -34,14 +35,25 @@ const api = new API();
 
 export function useAddAPI(
 	_authToken: AuthToken,
-	_api: APIResult,
+	api: APIResult,
 	_project: ProjectConfig
 ): AddAPIReturn {
 	const [states, setStates] = useState<AddAPIState[]>([
 		{ type: "installingPackage" },
 	]);
 
-	useEffect(() => {}, []);
+	useEffect(() => {
+		async function run() {
+			try {
+				await extract(api.packageName, `node_modules/${api.packageName}`);
+				setStates((s) => [...s, { type: "linkingAPIToProject" }]);
+			} catch (error) {
+				setStates((s) => [...s, { type: "error", error }]);
+			}
+		}
+
+		run();
+	}, []);
 
 	return {
 		currentState: states[states.length - 1]!,
