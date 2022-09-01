@@ -2,6 +2,7 @@ import { Box, Text } from "ink";
 import React, { useEffect } from "react";
 import { AuthToken } from "../api/types";
 import { AuthStatus, useAuth } from "../hooks/useAuth";
+import { Link } from "./Link";
 import { TaskDisplay } from "./TaskDisplay";
 
 type AuthDisplayProps = {
@@ -33,7 +34,14 @@ function Status({ status, isComplete }: { status: AuthStatus, isComplete: boolea
 		case "creatingRequestToken":
 			return <TaskDisplay isComplete={isComplete}>Creating request token</TaskDisplay>;
 		case "waitingForLogin":
-			return <TaskDisplay isComplete={isComplete}>You need to login here: <Text color="yellow" underline={true}>{status.url}</Text></TaskDisplay>
+			if (isComplete) {
+				return <></>
+			} else {
+				return (
+					<Box flexDirection="column">
+						<Text><Text color="yellow">→</Text> <Text>You need to login here: </Text><Text color="yellow" underline>{status.url}</Text></Text>
+					</Box>)
+			}
 		case "savingAuthToken":
 			return <></>
 		case "authenticated":
