@@ -19,6 +19,7 @@
 	],
 	"dependencies": {
 		"@boost/cli": "^4.0.0",
+		"@npmcli/promise-spawn": "^3.0.0",
 		"dotenv": "^16.0.1",
 		"ink": "^3.2.0",
 		"ink-spinner": "^4.0.3",
