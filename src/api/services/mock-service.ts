@@ -4,15 +4,17 @@ import {
 	APIResult,
 	APIService,
 	AuthToken,
-	HttpClient,
+	HTTPClientResponse,
 	ProjectConfig,
 	ProjectDefinition,
 	ProjectWorkspaceResponse,
 	WorkspaceDefinition,
 } from "../types";
 
+const baseUrl = "http://localhost:3000";
+
 export class MockAPIService implements APIService {
-	authUrl = "http://localhost:3000/auth/cli";
+	authUrl = `${baseUrl}/auth/cli`;
 
 	private willAuthenticate: boolean;
 	private searchResults: APIResult[];
@@ -77,10 +79,11 @@ export class MockAPIService implements APIService {
 		_projectId: string,
 		_integrationId: string,
 		_authToken: AuthToken
-	): Promise<HttpClient> {
+	): Promise<HTTPClientResponse> {
 		await resolveAfter(2);
 		return Promise.resolve({
 			id: "clientId-abcdefgh",
+			authenticationUrl: "http://localhost:3000/workspaces/test/test/test",
 		});
 	}
 }
@@ -107,7 +110,6 @@ export function createMockService({
 					description: "The world's most popular source code hosting service.",
 					officialDocumentation:
 						"https://docs.github.com/en/rest/guides/getting-started-with-the-rest-api",
-					url: "https://docs.github.com/en/rest",
 					id: "github",
 					packageName: "@apihero/github",
 				},
@@ -120,7 +122,6 @@ export function createMockService({
 					description: "The world's most popular source code hosting service.",
 					officialDocumentation:
 						"https://docs.github.com/en/rest/guides/getting-started-with-the-rest-api",
-					url: "https://docs.github.com/en/rest",
 					id: "github",
 					packageName: "@apihero/github",
 				},
@@ -129,7 +130,6 @@ export function createMockService({
 					description: "The world's most popular source code hosting service.",
 					officialDocumentation:
 						"https://docs.github.com/en/rest/guides/getting-started-with-the-rest-api",
-					url: "https://docs.github.com/en/rest",
 					id: "gitlab",
 					packageName: "@apihero/gitlab",
 				},

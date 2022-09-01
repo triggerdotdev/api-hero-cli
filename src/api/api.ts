@@ -8,7 +8,7 @@ import {
 	ProjectWorkspaceResponse,
 	ProjectDefinition,
 	WorkspaceDefinition,
-	HttpClient,
+	HTTPClientResponse,
 } from "./types";
 
 export class API implements APIService {
@@ -58,7 +58,7 @@ export class API implements APIService {
 		projectId: string,
 		integrationId: string,
 		authToken: AuthToken
-	): Promise<HttpClient> {
+	): Promise<HTTPClientResponse> {
 		return API.currentAPI.linkToApi(
 			workspaceId,
 			projectId,

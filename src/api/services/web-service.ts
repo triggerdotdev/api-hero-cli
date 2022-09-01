@@ -2,7 +2,7 @@ import {
 	APIResult,
 	APIService,
 	AuthToken,
-	HttpClient,
+	HTTPClientResponse,
 	ProjectDefinition,
 	ProjectWorkspaceResponse,
 	WorkspaceDefinition,
@@ -163,7 +163,7 @@ export class WebService implements APIService {
 		projectId: string,
 		integrationId: string,
 		authToken: AuthToken
-	): Promise<HttpClient> {
+	): Promise<HTTPClientResponse> {
 		try {
 			const response = await fetch(
 				`${this.baseUrl}/api/workspaces/${workspaceId}/projects/${projectId}/clients`,

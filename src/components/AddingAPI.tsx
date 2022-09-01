@@ -3,6 +3,7 @@ import React from "react";
 import { APIResult, AuthToken } from "../api/types";
 import { useAddAPI } from "../hooks/useAddAPI";
 import { TaskDisplay } from "./TaskDisplay";
+import { Tick } from "./Tick";
 
 type AddingAPIProps = {
   authToken: AuthToken;
@@ -23,7 +24,11 @@ export function AddingAPI({ authToken, projectId, workspaceId, api }: AddingAPIP
         case "linkingAPIToProject":
           return <TaskDisplay key={status.type} isComplete={isComplete}>Connecting {api.name} to project</TaskDisplay>
         case "complete":
-          return <Text key={status.type} color="green">{api.name} has been added to your project</Text>
+          return (
+            <Box flexDirection="column" key={status.type}>
+              <Text color="green"><Tick /> {api.name} has been added to your project</Text>
+              <Text>Add authentication here: <Text color="gray" underline>{status.client.authenticationUrl}</Text></Text>
+            </Box>)
         case "error":
           return <Text key={status.type} color="red">Error: {JSON.stringify(status.error)}</Text>
         default:

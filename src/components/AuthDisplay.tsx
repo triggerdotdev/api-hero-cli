@@ -2,7 +2,6 @@ import { Box, Text } from "ink";
 import React, { useEffect } from "react";
 import { AuthToken } from "../api/types";
 import { AuthStatus, useAuth } from "../hooks/useAuth";
-import { Link } from "./Link";
 import { TaskDisplay } from "./TaskDisplay";
 
 type AuthDisplayProps = {
