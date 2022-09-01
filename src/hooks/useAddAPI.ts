@@ -45,8 +45,7 @@ export function useAddAPI(
 	useEffect(() => {
 		async function run() {
 			try {
-				const result = await promiseSpawn("npm", ["install", api.packageName]);
-				console.log("ok!", result);
+				await promiseSpawn("npm", ["install", api.packageName]);
 				setStates((s) => [...s, { type: "linkingAPIToProject" }]);
 			} catch (error) {
 				setStates((s) => [...s, { type: "error", error }]);
