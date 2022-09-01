@@ -18,6 +18,7 @@
 		"dist/index.js"
 	],
 	"dependencies": {
+		"@apihero/github": "^1.1.4-beta.2",
 		"@boost/cli": "^4.0.0",
 		"@npmcli/promise-spawn": "^3.0.0",
 		"dotenv": "^16.0.1",

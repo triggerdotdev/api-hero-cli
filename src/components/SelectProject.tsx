@@ -125,7 +125,7 @@ export function SelectProject({ authToken, onComplete }: SelectProjectProps) {
             <TaskDisplay key={status.type} isComplete={isComplete}>Saving project</TaskDisplay>
           )
         case "complete":
-          return <TaskDisplay key={status.type} isComplete={true}>Added API to project <Text color="green">{status.workspaceName && status.projectName ? `${status.workspaceName}/${status.projectName}` : ""}</Text></TaskDisplay>
+          return <TaskDisplay key={status.type} isComplete={true}>API Hero project linked<Text color="green">{status.workspaceName && status.projectName ? `${status.workspaceName}/${status.projectName}` : ""}</Text></TaskDisplay>
         case "error":
           return <Text key={status.type}>Error: {status.error}</Text>
         default:

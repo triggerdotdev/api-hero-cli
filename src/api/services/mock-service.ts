@@ -4,6 +4,7 @@ import {
 	APIResult,
 	APIService,
 	AuthToken,
+	HttpClient,
 	ProjectConfig,
 	ProjectDefinition,
 	ProjectWorkspaceResponse,
@@ -60,7 +61,7 @@ export class MockAPIService implements APIService {
 		_authToken: AuthToken
 	): Promise<WorkspaceDefinition> {
 		await resolveAfter(2);
-		return Promise.resolve({ id: "workspaceId", name });
+		return Promise.resolve({ id: "workspaceId", title: name });
 	}
 	async createProject(
 		name: string,
@@ -68,7 +69,19 @@ export class MockAPIService implements APIService {
 		_authToken: AuthToken
 	): Promise<ProjectDefinition> {
 		await resolveAfter(2);
-		return Promise.resolve({ id: "projectId", name });
+		return Promise.resolve({ id: "projectId", title: name });
+	}
+
+	async linkToApi(
+		_workspaceId: string,
+		_projectId: string,
+		_integrationId: string,
+		_authToken: AuthToken
+	): Promise<HttpClient> {
+		await resolveAfter(2);
+		return Promise.resolve({
+			id: "clientId-abcdefgh",
+		});
 	}
 }
 
@@ -95,7 +108,7 @@ export function createMockService({
 					officialDocumentation:
 						"https://docs.github.com/en/rest/guides/getting-started-with-the-rest-api",
 					url: "https://docs.github.com/en/rest",
-					integrationId: "github",
+					id: "github",
 					packageName: "@apihero/github",
 				},
 			];
@@ -108,7 +121,7 @@ export function createMockService({
 					officialDocumentation:
 						"https://docs.github.com/en/rest/guides/getting-started-with-the-rest-api",
 					url: "https://docs.github.com/en/rest",
-					integrationId: "github",
+					id: "github",
 					packageName: "@apihero/github",
 				},
 				{
@@ -117,7 +130,7 @@ export function createMockService({
 					officialDocumentation:
 						"https://docs.github.com/en/rest/guides/getting-started-with-the-rest-api",
 					url: "https://docs.github.com/en/rest",
-					integrationId: "gitlab",
+					id: "gitlab",
 					packageName: "@apihero/gitlab",
 				},
 			];

@@ -28,6 +28,13 @@ export interface APIService {
 		workspaceId: string,
 		authToken: AuthToken
 	): Promise<ProjectDefinition>;
+	// POST api/workspaces/$workspaceId/projects/$projectId/clients
+	linkToApi(
+		workspaceId: string,
+		projectId: string,
+		integrationId: string,
+		authToken: AuthToken
+	): Promise<HttpClient>;
 }
 
 export type AuthToken = {
@@ -35,11 +42,10 @@ export type AuthToken = {
 };
 
 export type APIResult = {
+	id: string;
 	name: string;
 	description: string;
 	officialDocumentation: string | null;
-	url: string;
-	integrationId: string;
 	packageName: string;
 };
 
@@ -59,6 +65,10 @@ export type ProjectWithWorkspace = ProjectDefinition & {
 
 export type ProjectWorkspaceResponse = WorkspaceDefinition & {
 	projects: ProjectDefinition[];
+};
+
+export type HttpClient = {
+	id: string;
 };
 
 export const projectConfigSchema = z.object({

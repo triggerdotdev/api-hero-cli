@@ -8,6 +8,7 @@ import {
 	ProjectWorkspaceResponse,
 	ProjectDefinition,
 	WorkspaceDefinition,
+	HttpClient,
 } from "./types";
 
 export class API implements APIService {
@@ -43,11 +44,26 @@ export class API implements APIService {
 	): Promise<WorkspaceDefinition> {
 		return API.currentAPI.createWorkspace(name, authToken);
 	}
+
 	createProject(
 		name: string,
 		workspaceId: string,
 		authToken: AuthToken
 	): Promise<ProjectDefinition> {
 		return API.currentAPI.createProject(name, workspaceId, authToken);
+	}
+
+	linkToApi(
+		workspaceId: string,
+		projectId: string,
+		integrationId: string,
+		authToken: AuthToken
+	): Promise<HttpClient> {
+		return API.currentAPI.linkToApi(
+			workspaceId,
+			projectId,
+			integrationId,
+			authToken
+		);
 	}
 }

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { API } from "../api/api";
-import { APIResult, AuthToken, ProjectConfig } from "../api/types";
+import { APIResult, AuthToken, HttpClient, ProjectConfig } from "../api/types";
 const promiseSpawn = require("@npmcli/promise-spawn");
 
 export type AddAPIState =
@@ -19,6 +19,7 @@ type LinkingAPIToProject = {
 
 type Complete = {
 	type: "complete";
+	client: HttpClient;
 };
 
 type Error = {
@@ -34,9 +35,9 @@ type AddAPIReturn = {
 const api = new API();
 
 export function useAddAPI(
-	_authToken: AuthToken,
-	api: APIResult,
-	_project: ProjectConfig
+	authToken: AuthToken,
+	selectedApi: APIResult,
+	project: ProjectConfig
 ): AddAPIReturn {
 	const [states, setStates] = useState<AddAPIState[]>([
 		{ type: "installingPackage" },
@@ -45,8 +46,16 @@ export function useAddAPI(
 	useEffect(() => {
 		async function run() {
 			try {
-				await promiseSpawn("npm", ["install", api.packageName]);
+				await promiseSpawn("npm", ["install", selectedApi.packageName]);
 				setStates((s) => [...s, { type: "linkingAPIToProject" }]);
+
+				const client = await api.linkToApi(
+					project.workspaceId,
+					project.projectId,
+					selectedApi.id,
+					authToken
+				);
+				setStates((s) => [...s, { type: "complete", client }]);
 			} catch (error) {
 				setStates((s) => [...s, { type: "error", error }]);
 			}

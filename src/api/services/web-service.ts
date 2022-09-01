@@ -2,6 +2,7 @@ import {
 	APIResult,
 	APIService,
 	AuthToken,
+	HttpClient,
 	ProjectDefinition,
 	ProjectWorkspaceResponse,
 	WorkspaceDefinition,
@@ -142,6 +143,37 @@ export class WebService implements APIService {
 					},
 					body: JSON.stringify({
 						name,
+					}),
+				}
+			);
+
+			if (response.ok && response.status === 200) {
+				const data = await response.json();
+				return data;
+			}
+
+			throw `${response.status} ${response.statusText}`;
+		} catch (error) {
+			throw error;
+		}
+	}
+
+	async linkToApi(
+		workspaceId: string,
+		projectId: string,
+		integrationId: string,
+		authToken: AuthToken
+	): Promise<HttpClient> {
+		try {
+			const response = await fetch(
+				`${this.baseUrl}/api/workspaces/${workspaceId}/projects/${projectId}/clients`,
+				{
+					method: "POST",
+					headers: {
+						Authorization: `Bearer ${authToken.tokenId}`,
+					},
+					body: JSON.stringify({
+						integrationId,
 					}),
 				}
 			);
