@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { API } from "../api/api";
 import { APIResult, AuthToken, ProjectConfig } from "../api/types";
-import { extract } from "pacote";
+const promiseSpawn = require("@npmcli/promise-spawn");
 
 export type AddAPIState =
 	| InstallingPackage
@@ -45,7 +45,8 @@ export function useAddAPI(
 	useEffect(() => {
 		async function run() {
 			try {
-				await extract(api.packageName, `node_modules/${api.packageName}`);
+				const result = await promiseSpawn("npm", ["install", api.packageName]);
+				console.log("ok!", result);
 				setStates((s) => [...s, { type: "linkingAPIToProject" }]);
 			} catch (error) {
 				setStates((s) => [...s, { type: "error", error }]);
