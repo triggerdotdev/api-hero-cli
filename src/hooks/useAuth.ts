@@ -82,7 +82,10 @@ export function useAuth(): Auth {
 					{ type: "error", error: new Error("Timeout") },
 				]);
 			} catch (error) {
-				setStatus((s) => [...s, { type: "error", error }]);
+				setStatus((s) => [
+					...s,
+					{ type: "error", error: JSON.stringify(error) },
+				]);
 			}
 		}
 		auth();
