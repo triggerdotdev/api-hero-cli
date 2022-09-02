@@ -18,7 +18,9 @@ export class API implements APIService {
 	// 	projects: "one",
 	// });
 
-	static currentAPI: APIService = new WebService("http://localhost:3000");
+	static currentAPI: APIService = new WebService(
+		process.env["API_HERO_BASE_URL"] ?? "https://app.apihero.run"
+	);
 
 	authUrl: string = API.currentAPI.authUrl;
 

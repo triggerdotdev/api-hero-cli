@@ -5,6 +5,7 @@ const project = path.join(__dirname, "..", "tsconfig.json");
 
 // In dev mode -> use ts-node and dev plugins
 process.env.NODE_ENV = "development";
+process.env.API_HERO_BASE_URL = "http://localhost:3000";
 
 require("ts-node").register({ project });
 
