@@ -1,6 +1,6 @@
 {
-	"name": "cli-2",
-	"version": "0.0.0",
+	"name": "apihero",
+	"version": "1.0.0",
 	"license": "MIT",
 	"bin": {
 		"apihero": "./bin/run"
