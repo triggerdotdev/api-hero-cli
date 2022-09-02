@@ -82,6 +82,7 @@ export class MockAPIService implements APIService {
 	): Promise<HTTPClientResponse> {
 		await resolveAfter(2);
 		return Promise.resolve({
+			success: true,
 			id: "clientId-abcdefgh",
 			authenticationUrl: "http://localhost:3000/workspaces/test/test/test",
 		});
