@@ -7,6 +7,7 @@ import {
 	ProjectWorkspaceResponse,
 	WorkspaceDefinition,
 } from "../types";
+var fetch = require("node-fetch-polyfill");
 
 export class WebService implements APIService {
 	authUrl: string;
