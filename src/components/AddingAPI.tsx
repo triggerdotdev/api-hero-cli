@@ -34,9 +34,9 @@ export function AddingAPI({ authToken, projectId, workspaceId, api }: AddingAPIP
                   <Text><Text color={"gray"}>React:</Text> npm install @apihero/react</Text>
                   <Text><Text color={"gray"}>Node:</Text> npm install @apihero/node</Text>
                 </Box>
-                <Text color={"red"}> TODO: Add your project environment variable</Text>
-                <Text>2. View your project: <Text underline>{status.client.authenticationUrl}</Text></Text>
-                <Text>3. View the documentation: <Text underline>https://docs.apihero.run</Text></Text>
+                <Text color={"red"}>2. TODO: instruction on how to add your project environment variable</Text>
+                <Text>3. View your project: <Text underline>{status.client.authenticationUrl}</Text></Text>
+                <Text>4. View the documentation: <Text underline>https://docs.apihero.run</Text></Text>
               </Box>
             </Box>)
         case "error":
