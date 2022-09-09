@@ -27,10 +27,17 @@ export function AddingAPI({ authToken, projectId, workspaceId, api }: AddingAPIP
           return (
             <Box flexDirection="column" key={status.type} marginTop={1}>
               <Text><Tick /><Text color="green"> Success:</Text> {api.name} has been added to your project</Text>
-              <Text><Newline /></Text>
-              <Text>Now add authentication:</Text>
-              <Text color="gray" underline>{status.client.authenticationUrl}</Text>
-              <Text><Newline /></Text>
+              <Box flexDirection="column" borderColor={"yellow"} borderStyle="double" padding={1}>
+                <Text color="yellow" bold>Instructions</Text>
+                <Text>1. Install the node or react package</Text>
+                <Box flexDirection="column" marginLeft={4}>
+                  <Text><Text color={"gray"}>React:</Text> npm install @apihero/react</Text>
+                  <Text><Text color={"gray"}>Node:</Text> npm install @apihero/node</Text>
+                </Box>
+                <Text color={"red"}> TODO: Add your project environment variable</Text>
+                <Text>2. View your project: <Text underline>{status.client.authenticationUrl}</Text></Text>
+                <Text>3. View the documentation: <Text underline>https://docs.apihero.run</Text></Text>
+              </Box>
             </Box>)
         case "error":
           return <Text key={status.type} color="red">Error: {JSON.stringify(status.error)}</Text>
