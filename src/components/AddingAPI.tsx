@@ -1,3 +1,4 @@
+import { Select } from "@boost/cli/react";
 import { Box, Newline, Text } from "ink";
 import React from "react";
 import { APIResult, AuthToken } from "../api/types";
@@ -13,7 +14,7 @@ type AddingAPIProps = {
 }
 
 export function AddingAPI({ authToken, projectId, workspaceId, api }: AddingAPIProps) {
-  const { allStates } = useAddAPI(authToken, api, { projectId, workspaceId: workspaceId });
+  const { allStates, selectFrameworkPackage } = useAddAPI(authToken, api, { projectId, workspaceId: workspaceId });
 
   return <Box flexDirection="column">
     {allStates.map((status, index) => {
@@ -21,22 +22,36 @@ export function AddingAPI({ authToken, projectId, workspaceId, api }: AddingAPIP
       switch (status.type) {
         case "installingPackage":
           return <TaskDisplay key={status.type} isComplete={isComplete}>Installing package <Text color="green">{api.packageName}</Text></TaskDisplay>
+        case "checkingFrameworkPackage":
+          return <React.Fragment key={status.type}></React.Fragment>
+        case "selectFrameworkPackage":
+          if (isComplete) {
+            return <React.Fragment key={status.type}></React.Fragment>
+          } else {
+            return (
+              <Box key={status.type} flexDirection="column">
+                <Select
+                  label="Which API Hero framework would you like to install?"
+                  onSubmit={(value) => {
+                    selectFrameworkPackage(value === "react" ? "react" : "node");
+                  }}
+                  options={[{ label: "React", value: "react" }, { label: "Node", value: "node" }]}
+                />
+              </Box>)
+          }
+        case "installingFrameworkPackage":
+          return <TaskDisplay key={status.type} isComplete={isComplete}>Installing {status.package} framework package</TaskDisplay>
         case "linkingAPIToProject":
           return <TaskDisplay key={status.type} isComplete={isComplete}>Connecting {api.name} to project</TaskDisplay>
         case "complete":
           return (
             <Box flexDirection="column" key={status.type} marginTop={1}>
               <Text><Tick /><Text color="green"> Success:</Text> {api.name} has been added to your project</Text>
-              <Box flexDirection="column" borderColor={"yellow"} borderStyle="double" padding={1}>
+              <Box flexDirection="column" borderColor={"yellow"} borderStyle="double" padding={1} marginTop={1}>
                 <Text color="yellow" bold>Instructions</Text>
-                <Text>1. Install the node or react package</Text>
-                <Box flexDirection="column" marginLeft={4}>
-                  <Text><Text color={"gray"}>React:</Text> npm install @apihero/react</Text>
-                  <Text><Text color={"gray"}>Node:</Text> npm install @apihero/node</Text>
-                </Box>
-                <Text color={"red"}>2. TODO: instruction on how to add your project environment variable</Text>
-                <Text>3. View your project: <Text underline>{status.client.authenticationUrl}</Text></Text>
-                <Text>4. View the documentation: <Text underline>https://docs.apihero.run</Text></Text>
+                <Text color={"red"}>1. TODO: instruction on how to add your project environment variable</Text>
+                <Text>2. View your project: <Text underline>{status.client.authenticationUrl}</Text></Text>
+                <Text>3. View the documentation: <Text underline>https://docs.apihero.run</Text></Text>
               </Box>
             </Box>)
         case "error":
