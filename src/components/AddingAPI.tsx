@@ -49,9 +49,8 @@ export function AddingAPI({ authToken, projectId, workspaceId, api }: AddingAPIP
               <Text><Tick /><Text color="green"> Success:</Text> {api.name} has been added to your project</Text>
               <Box flexDirection="column" borderColor={"yellow"} borderStyle="double" padding={1} marginTop={1}>
                 <Text color="yellow" bold>Instructions</Text>
-                <Text color={"red"}>1. TODO: instruction on how to add your project environment variable</Text>
-                <Text>2. View your project: <Text underline>{status.client.authenticationUrl}</Text></Text>
-                <Text>3. View the documentation: <Text underline>https://docs.apihero.run</Text></Text>
+                <Text>1. View your project: <Text underline>{status.client.authenticationUrl}</Text></Text>
+                <Text>2. View our getting started guide: <Text underline>https://docs.apihero.run</Text></Text>
               </Box>
             </Box>)
         case "error":
