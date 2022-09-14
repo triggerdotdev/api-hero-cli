@@ -3,6 +3,7 @@ import { Box, Newline, Text } from "ink";
 import React from "react";
 import { APIResult, AuthToken } from "../api/types";
 import { useAddAPI } from "../hooks/useAddAPI";
+import { CodeBlock } from "./CodeBlock";
 import { TaskDisplay } from "./TaskDisplay";
 import { Tick } from "./Tick";
 
@@ -51,6 +52,7 @@ export function AddingAPI({ authToken, projectId, workspaceId, api }: AddingAPIP
                 <Text color="yellow" bold>Instructions</Text>
                 <Text>1. View your project: <Text underline>{status.client.authenticationUrl}</Text></Text>
                 <Text>2. View our getting started guide: <Text underline>https://docs.apihero.run</Text></Text>
+                <Text>3. Your project key is: <CodeBlock>{projectId}</CodeBlock></Text>
               </Box>
             </Box>)
         case "error":
