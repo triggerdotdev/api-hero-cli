@@ -31,15 +31,34 @@ export default class AddCommand extends Command<GlobalOptions, CustomParams> {
 const distinctId = nanoid();
 
 function Add({ query }: { query: string }) {
-	const { states, setCurrentState, currentState } = useAddCommand();
+	const { states, setCurrentState, currentState, userId } = useAddCommand();
 
 	useEffect(() => {
 		postHogClient.capture({
-			distinctId,
+			distinctId: userId ?? distinctId,
+			event: "cli-started",
+		});
+	}, []);
+
+	useEffect(() => {
+		postHogClient.capture({
+			distinctId: userId ?? distinctId,
 			event: "cli-state-changed",
 			properties: { state: currentState.type },
 		});
 	}, [currentState]);
+
+	useEffect(() => {
+		if (userId) {
+			postHogClient.identify({
+				distinctId: userId,
+			});
+			postHogClient.alias({
+				distinctId: userId,
+				alias: distinctId,
+			});
+		}
+	}, [userId]);
 
 	return (
 		<Box flexDirection="column">

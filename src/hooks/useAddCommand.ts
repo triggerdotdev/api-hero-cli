@@ -59,6 +59,7 @@ type AddCommandReturn = {
 	currentState: AddCommandState;
 	states: AddCommandState[];
 	setCurrentState: (state: AddCommandState) => void;
+	userId: string | null;
 };
 
 export function useAddCommand(): AddCommandReturn {
@@ -70,9 +71,16 @@ export function useAddCommand(): AddCommandReturn {
 		setStates((s) => [...s, state]);
 	};
 
+	const currentState = states[states.length - 1]!;
+	let userId: string | null = null;
+	if ("authToken" in currentState) {
+		userId = currentState.authToken.userId;
+	}
+
 	return {
-		currentState: states[states.length - 1]!,
+		currentState,
 		states,
 		setCurrentState,
+		userId: userId,
 	};
 }
