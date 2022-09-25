@@ -38,7 +38,7 @@ export class MockAPIService implements APIService {
 	async isAuthenticated(_requestToken: string): Promise<AuthToken | undefined> {
 		await resolveAfter(1);
 		return this.willAuthenticate
-			? Promise.resolve({ tokenId: "abcdefgh" })
+			? Promise.resolve({ tokenId: "abcdefgh", userId: "user:123456" })
 			: // eslint-disable-next-line unicorn/no-useless-undefined
 			  Promise.resolve(undefined);
 	}

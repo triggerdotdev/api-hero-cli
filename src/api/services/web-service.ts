@@ -48,8 +48,8 @@ export class WebService implements APIService {
 
 			if (response.ok && response.status === 200) {
 				const data = await response.json();
-				if (data.authToken) {
-					return { tokenId: data.authToken };
+				if (data.authToken && data.userId) {
+					return { tokenId: data.authToken, userId: data.userId };
 				}
 			}
 

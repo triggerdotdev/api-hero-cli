@@ -29,6 +29,7 @@ export interface APIService {
 
 export type AuthToken = {
 	tokenId: string;
+	userId: string;
 };
 
 export type APIResult = {
