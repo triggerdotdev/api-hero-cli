@@ -2,6 +2,23 @@
 	"name": "apihero",
 	"version": "1.0.9",
 	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/apihero-run/api-hero-cli"
+	},
+	"keywords": [
+		"API Hero",
+		"API",
+		"CLI"
+	],
+	"author": "Matt Aitken",
+	"publishConfig": {
+		"access": "public"
+	},
+	"bugs": {
+		"url": "https://github.com/apihero-run/api-hero-cli/issues"
+	},
+	"homepage": "https://github.com/apihero-run/api-hero-cli",
 	"bin": {
 		"apihero": "./bin/run"
 	},
