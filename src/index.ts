@@ -1,5 +1,11 @@
 import { Program } from "@boost/cli";
+import { PostHog } from "posthog-node";
 import AddCommand from "./commands/AddCommand";
+
+export const postHogClient = new PostHog(
+	"phc_sbTCuwyQ0vh4ICohbirIFhcKMWLM58kFlkEPy0umZhA",
+	{ host: "https://app.posthog.com" }
+);
 
 const program = new Program({
 	bin: "apihero",
