@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import invariant from "tiny-invariant";
 import { API } from "../api/api";
 import { APIResult, AuthToken, HTTPClient, ProjectConfig } from "../api/types";
 const promiseSpawn = require("@npmcli/promise-spawn");
@@ -11,6 +12,10 @@ export type AddAPIState =
 	| LinkingAPIToProject
 	| Complete
 	| Error;
+
+type LinkingAPIToProject = {
+	type: "linkingAPIToProject";
+};
 
 type InstallingMainPackage = {
 	type: "installingPackage";
@@ -27,10 +32,6 @@ type SelectFrameworkPackage = {
 type InstallingFrameworkPackage = {
 	type: "installingFrameworkPackage";
 	package: "react" | "node";
-};
-
-type LinkingAPIToProject = {
-	type: "linkingAPIToProject";
 };
 
 type Complete = {
@@ -56,8 +57,9 @@ export function useAddAPI(
 	selectedApi: APIResult,
 	project: ProjectConfig
 ): AddAPIReturn {
+	const [client, setClient] = useState<HTTPClient | undefined>(undefined);
 	const [states, setStates] = useState<AddAPIState[]>([
-		{ type: "installingPackage" },
+		{ type: "linkingAPIToProject" },
 	]);
 
 	const currentState = useMemo(() => {
@@ -68,6 +70,22 @@ export function useAddAPI(
 		async function run() {
 			try {
 				switch (currentState.type) {
+					case "linkingAPIToProject": {
+						const response = await api.linkToApi(
+							project.workspaceId,
+							project.projectId,
+							selectedApi.id,
+							authToken
+						);
+
+						if (response.success) {
+							setClient(response);
+							setStates((s) => [...s, { type: "installingPackage" }]);
+						} else {
+							throw new Error(response.error);
+						}
+						break;
+					}
 					case "installingPackage": {
 						await promiseSpawn("npm", ["install", selectedApi.packageName]);
 						setStates((s) => [...s, { type: "checkingFrameworkPackage" }]);
@@ -91,22 +109,8 @@ export function useAddAPI(
 							"install",
 							`@apihero/${currentState.package}`,
 						]);
-						setStates((s) => [...s, { type: "linkingAPIToProject" }]);
-						break;
-					}
-					case "linkingAPIToProject": {
-						const response = await api.linkToApi(
-							project.workspaceId,
-							project.projectId,
-							selectedApi.id,
-							authToken
-						);
-
-						if (response.success) {
-							setStates((s) => [...s, { type: "complete", client: response }]);
-						} else {
-							throw new Error(response.error);
-						}
+						invariant(client, "Client should be defined");
+						setStates((s) => [...s, { type: "complete", client: client }]);
 						break;
 					}
 				}
