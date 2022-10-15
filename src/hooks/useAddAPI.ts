@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import invariant from "tiny-invariant";
 import { API } from "../api/api";
 import { APIResult, AuthToken, HTTPClient, ProjectConfig } from "../api/types";
+import { detect, PM } from "detect-package-manager";
 const promiseSpawn = require("@npmcli/promise-spawn");
 
 export type AddAPIState =
@@ -58,6 +59,9 @@ export function useAddAPI(
 	project: ProjectConfig
 ): AddAPIReturn {
 	const [client, setClient] = useState<HTTPClient | undefined>(undefined);
+	const [packageManager, setPackageManager] = useState<PM | undefined>(
+		undefined
+	);
 	const [states, setStates] = useState<AddAPIState[]>([
 		{ type: "linkingAPIToProject" },
 	]);
@@ -87,15 +91,21 @@ export function useAddAPI(
 						break;
 					}
 					case "installingPackage": {
-						await promiseSpawn("npm", ["install", selectedApi.packageName]);
+						const packageManager = await detect();
+						setPackageManager(packageManager);
+						await installPackage(packageManager, selectedApi.packageName);
 						setStates((s) => [...s, { type: "checkingFrameworkPackage" }]);
 						break;
 					}
 					case "checkingFrameworkPackage": {
-						const hasFrameworkPackages = await checkingFrameworkPackage();
+						invariant(packageManager, "Package manager is not set");
+						const hasFrameworkPackages = await checkingFrameworkPackage(
+							packageManager
+						);
 
 						if (hasFrameworkPackages) {
-							setStates((s) => [...s, { type: "linkingAPIToProject" }]);
+							invariant(client, "Client is not set");
+							setStates((s) => [...s, { type: "complete", client: client }]);
 						} else {
 							setStates((s) => [...s, { type: "selectFrameworkPackage" }]);
 						}
@@ -105,10 +115,11 @@ export function useAddAPI(
 						break;
 					}
 					case "installingFrameworkPackage": {
-						await promiseSpawn("npm", [
-							"install",
-							`@apihero/${currentState.package}`,
-						]);
+						invariant(packageManager, "Package manager is not set");
+						await installPackage(
+							packageManager,
+							`@apihero/${currentState.package}`
+						);
 						invariant(client, "Client should be defined");
 						setStates((s) => [...s, { type: "complete", client: client }]);
 						break;
@@ -136,18 +147,66 @@ export function useAddAPI(
 	};
 }
 
-async function checkingFrameworkPackage(): Promise<boolean> {
-	const hasReactPackage = await hasPackage("@apihero/react");
-	const hasNodePackage = await hasPackage("@apihero/node");
+async function checkingFrameworkPackage(packageManager: PM): Promise<boolean> {
+	const hasReactPackage = await hasPackage(packageManager, "@apihero/react");
+	const hasNodePackage = await hasPackage(packageManager, "@apihero/node");
 
 	return hasReactPackage || hasNodePackage;
 }
 
-async function hasPackage(name: string) {
+async function hasPackage(packageManager: PM, packageName: string) {
 	try {
-		const results = await promiseSpawn("npm", ["ls", name]);
-		return true;
+		switch (packageManager) {
+			case "npm": {
+				await promiseSpawn("npm", ["list", packageName]);
+				return true;
+			}
+			case "yarn": {
+				await promiseSpawn("yarn", ["list", packageName]);
+				return true;
+			}
+			case "pnpm": {
+				const result = await promiseSpawn("pnpm", [
+					"--json",
+					"list",
+					packageName,
+				]);
+
+				const resultText = result.stdout?.toString();
+
+				if (!resultText) {
+					return false;
+				}
+
+				const json = JSON.parse(resultText);
+
+				for (const project of json) {
+					if (
+						project.dependencies !== undefined &&
+						project.dependencies[packageName] !== undefined
+					) {
+						return true;
+					}
+				}
+
+				return false;
+			}
+		}
 	} catch (error) {
 		return false;
+	}
+}
+
+async function installPackage(packageManager: PM, packageName: string) {
+	switch (packageManager) {
+		case "npm":
+			await promiseSpawn("npm", ["install", packageName]);
+			break;
+		case "yarn":
+			await promiseSpawn("yarn", ["add", packageName]);
+			break;
+		case "pnpm":
+			await promiseSpawn("pnpm", ["add", packageName]);
+			break;
 	}
 }
