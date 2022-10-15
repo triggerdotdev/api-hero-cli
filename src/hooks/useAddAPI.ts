@@ -162,8 +162,26 @@ async function hasPackage(packageManager: PM, packageName: string) {
 				return true;
 			}
 			case "yarn": {
-				await promiseSpawn("yarn", ["list", packageName]);
-				return true;
+				const result = await promiseSpawn("yarn", [
+					"--json",
+					"list",
+					"--pattern",
+					packageName,
+				]);
+
+				const resultText = result.stdout?.toString();
+
+				if (!resultText) {
+					return false;
+				}
+
+				const json = JSON.parse(resultText);
+
+				if (json.data.trees.length > 0) {
+					return true;
+				}
+
+				return false;
 			}
 			case "pnpm": {
 				const result = await promiseSpawn("pnpm", [
